@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="col-md-5">
+        <div class="card border-0 shadow">
+            <div class="card-body p-5">
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold">Kuraş Kuruyemiş</h2>
+                    <p class="text-muted">B2B Sipariş Portalı Girişi</p>
+                </div>
+
+                {% if form.errors %}
+                <div class="alert alert-danger" role="alert">
+                    Kullanıcı adı veya şifre hatalı. Lütfen tekrar deneyin.
+                </div>
+                {% endif %}
+
+                <form method="POST" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="id_username" class="form-label fw-bold">Firma Kullanıcı Adı</label>
+                        <input type="text" name="username" class="form-control form-control-lg" id="id_username" required autofocus>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="id_password" class="form-label fw-bold">Şifre</label>
+                        <input type="password" name="password" class="form-control form-control-lg" id="id_password" required>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-dark btn-lg fw-bold">Sisteme Giriş Yap</button>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <small class="text-muted">Bayilik başvurusu ve şifre işlemleri için lütfen <br> müşteri temsilcinizle iletişime geçin.</small>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

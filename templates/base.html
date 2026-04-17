@@ -15,10 +15,17 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
         <div class="container">
             <a class="navbar-brand" href="{% url 'products:b2b_list' %}">Kuraş B2B</a>
-            <div class="d-flex">
-                <a href="{% url 'orders:cart_detail' %}" class="btn btn-warning fw-bold">
-                    🛒 Sepetim
-                </a>
+            <div class="d-flex align-items-center">
+                {% if user.is_authenticated %}
+                    <span class="text-light me-3 d-none d-md-block">Merhaba, <strong>{{ user.username }}</strong></span>
+                    <a href="{% url 'orders:cart_detail' %}" class="btn btn-warning fw-bold me-2">
+                        🛒 Sepetim
+                    </a>
+                    <form action="{% url 'logout' %}" method="post" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-light">Çıkış</button>
+                    </form>
+                {% endif %}
             </div>
         </div>
     </nav>

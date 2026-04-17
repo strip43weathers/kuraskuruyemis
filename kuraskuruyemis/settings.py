@@ -116,3 +116,5 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CART_SESSION_ID = 'b2b_cart'
+
+LOGIN_REDIRECT_URL = '/urunler/b2b-portal/'
