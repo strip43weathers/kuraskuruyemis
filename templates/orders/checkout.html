@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-dark text-white py-3">
+                <h4 class="mb-0">Siparişi Tamamla</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <strong>Bilgi:</strong> Siparişiniz onaylandığında doğrudan Kuraş Kuruyemiş deposuna iletilecek ve hazırlık aşamasına geçilecektir. Ödeme işlemi firma ile aranızdaki cari anlaşmaya göre yapılacaktır.
+                </div>
+
+                <h5 class="mb-3">Sipariş Özeti</h5>
+                <ul class="list-group mb-4">
+                    {% for item in cart %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ item.product.name }} ({{ item.quantity }} kg)
+                        <span class="fw-bold">{{ item.total_price }} TL</span>
+                    </li>
+                    {% endfor %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
+                        <span class="fw-bold">Ödenecek Toplam Tutar:</span>
+                        <span class="fw-bold fs-5 text-success">{{ cart.get_total_price }} TL</span>
+                    </li>
+                </ul>
+
+                <form action="{% url 'orders:checkout' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label for="order_note" class="form-label fw-bold">Sipariş Notu (Opsiyonel)</label>
+                        <textarea name="order_note" id="order_note" rows="3" class="form-control" placeholder="Teslimat veya hazırlık ile ilgili eklemek istediğiniz bir not var mı?"></textarea>
+                    </div>
+
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" type="checkbox" id="agreement" required>
+                        <label class="form-check-label" for="agreement">
+                            Siparişimin kesinleşeceğini ve cari hesabıma yansıtılacağını onaylıyorum.
+                        </label>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success btn-lg fw-bold">
+                            Siparişi Kesinleştir ve Gönder
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

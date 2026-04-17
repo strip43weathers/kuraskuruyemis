@@ -40,3 +40,22 @@ class Cart:
         """Sipariş tamamlanınca sepeti boşalt."""
         del self.session[settings.CART_SESSION_ID]
         self.save()
+
+    def __iter__(self):
+        """Sepetteki ürünleri veritabanından çeker ve şablonda döngüye sokmayı sağlar."""
+        product_ids = self.cart.keys()
+        products = Product.objects.filter(id__in=product_ids)
+
+        cart = self.cart.copy()
+        for product in products:
+            cart[str(product.id)]['product'] = product
+
+        for item in cart.values():
+            item['price'] = Decimal(item['price'])
+            item['quantity'] = Decimal(item['quantity'])
+            item['total_price'] = item['price'] * item['quantity']
+            yield item
+
+    def get_total_price(self):
+        """Sepetin genel toplam tutarını hesaplar."""
+        return sum(Decimal(item['price']) * Decimal(item['quantity']) for item in self.cart.values())

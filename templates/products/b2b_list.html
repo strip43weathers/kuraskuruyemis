@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4 align-items-center">
+    <div class="col">
+        <h2 class="mb-0">Toptan Sipariş Ekranı</h2>
+        <p class="text-muted">Hoş geldiniz, {{ request.user.username }}. Sipariş vermek istediğiniz miktarları kilogram (KG) cinsinden giriniz.</p>
+    </div>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for product in products %}
+    <div class="col">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h5 class="card-title fw-bold mb-0">{{ product.name }}</h5>
+                    <span class="badge bg-secondary">{{ product.category.name }}</span>
+                </div>
+                
+                <p class="card-text mb-3">
+                    <span class="fs-5 fw-bold text-success">{{ product.wholesale_price }} TL</span> <small class="text-muted">/ kg</small>
+                    <br>
+                    {% if product.stock_quantity > 0 %}
+                        <small class="text-success">Mevcut Stok: {{ product.stock_quantity }} kg</small>
+                    {% else %}
+                        <small class="text-danger fw-bold">Tükendi</small>
+                    {% endif %}
+                </p>
+
+                <form action="{% url 'orders:cart_add' product.id %}" method="POST">
+                    {% csrf_token %}
+                    <div class="input-group mb-2">
+                        <input type="number" 
+                               name="quantity" 
+                               class="form-control" 
+                               value="{{ product.minimum_order_quantity }}" 
+                               min="{{ product.minimum_order_quantity }}" 
+                               max="{{ product.stock_quantity }}"
+                               step="0.01" 
+                               required
+                               {% if product.stock_quantity <= 0 %}disabled{% endif %}>
+                        <span class="input-group-text bg-light">KG</span>
+                        <button type="submit" class="btn btn-dark" {% if product.stock_quantity <= 0 %}disabled{% endif %}>
+                            Ekle
+                        </button>
+                    </div>
+                    <small class="text-muted" style="font-size: 0.8rem;">Min. Sipariş: {{ product.minimum_order_quantity }} kg</small>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info border-0 shadow-sm">
+            Şu an sistemde aktif ürün bulunmamaktadır.
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}
