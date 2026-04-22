@@ -21,6 +21,7 @@ class Product(models.Model):
     name = models.CharField(max_length=200, verbose_name="Ürün Adı")
     sku = models.CharField(max_length=50, unique=True, verbose_name="Stok Kodu (SKU)")
     description = models.TextField(blank=True, verbose_name="Ürün Açıklaması")
+    image = models.ImageField(upload_to='products/%Y/%m/%d', blank=True, null=True, verbose_name="Ürün Görseli")
 
     # B2B için tek tip toptan fiyat
     wholesale_price = models.DecimalField(

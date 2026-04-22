@@ -7,11 +7,55 @@
         <p class="text-muted">Hoş geldiniz, {{ request.user.username }}. Sipariş vermek istediğiniz miktarları kilogram (KG) cinsinden giriniz.</p>
     </div>
 </div>
-
+<div class="card border-0 shadow-sm mb-4 bg-white">
+    <div class="card-body p-3">
+        <form method="GET" action="{% url 'products:b2b_list' %}" class="row g-2 align-items-center">
+            
+            <div class="col-md-5">
+                <input type="text" name="q" class="form-control" placeholder="Ürün adı veya Stok Kodu (SKU) ara..." value="{{ current_query }}">
+            </div>
+            
+            <div class="col-md-3">
+                <select name="category" class="form-select">
+                    <option value="">Tüm Kategoriler</option>
+                    {% for cat in categories %}
+                        <option value="{{ cat.id }}" {% if current_category == cat.id|stringformat:"s" %}selected{% endif %}>
+                            {{ cat.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="col-md-3">
+                <select name="sort" class="form-select">
+                    <option value="newest" {% if current_sort == 'newest' %}selected{% endif %}>Eklenme Tarihi (Yeni)</option>
+                    <option value="price_asc" {% if current_sort == 'price_asc' %}selected{% endif %}>Fiyata Göre Artan</option>
+                    <option value="price_desc" {% if current_sort == 'price_desc' %}selected{% endif %}>Fiyata Göre Azalan</option>
+                    <option value="name_asc" {% if current_sort == 'name_asc' %}selected{% endif %}>Ürün Adı (A-Z)</option>
+                </select>
+            </div>
+            
+            <div class="col-md-1 d-flex gap-1">
+                {% if current_query or current_category or current_sort != 'newest' %}
+                    <a href="{% url 'products:b2b_list' %}" class="btn btn-outline-secondary w-100" title="Filtreleri Temizle">✖</a>
+                {% endif %}
+                <button type="submit" class="btn btn-dark w-100">Ara</button>
+            </div>
+        </form>
+    </div>
+</div>
 <div class="row row-cols-1 row-cols-md-3 g-4">
     {% for product in products %}
     <div class="col">
         <div class="card h-100 border-0 shadow-sm">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
+            {% else %}
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center text-muted" style="height: 200px;">
+                    <span class="fs-1">🥜</span>
+                </div>
+            {% endif %}
+        
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-start mb-2">
                     <h5 class="card-title fw-bold mb-0">{{ product.name }}</h5>
