@@ -96,5 +96,44 @@
         </div>
     </div>
     {% endfor %}
+{% if products.has_other_pages %}
+<nav aria-label="Ürün Sayfalama" class="mt-5 mb-4">
+    <ul class="pagination justify-content-center">
+        
+        {% if products.has_previous %}
+            <li class="page-item">
+                <a class="page-link text-dark" href="?page={{ products.previous_page_number }}&q={{ current_query }}&category={{ current_category }}&sort={{ current_sort }}">&laquo; Önceki</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">&laquo; Önceki</span>
+            </li>
+        {% endif %}
+
+        {% for i in products.paginator.page_range %}
+            {% if products.number == i %}
+                <li class="page-item active" aria-current="page">
+                    <span class="page-link bg-dark border-dark">{{ i }}</span>
+                </li>
+            {% else %}
+                <li class="page-item">
+                    <a class="page-link text-dark" href="?page={{ i }}&q={{ current_query }}&category={{ current_category }}&sort={{ current_sort }}">{{ i }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if products.has_next %}
+            <li class="page-item">
+                <a class="page-link text-dark" href="?page={{ products.next_page_number }}&q={{ current_query }}&category={{ current_category }}&sort={{ current_sort }}">Sonraki &raquo;</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">Sonraki &raquo;</span>
+            </li>
+        {% endif %}
+        
+    </ul>
+</nav>
+{% endif %}
 </div>
 {% endblock content %}
