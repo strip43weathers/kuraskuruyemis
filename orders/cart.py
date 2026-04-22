@@ -56,6 +56,10 @@ class Cart:
             item['total_price'] = item['price'] * item['quantity']
             yield item
 
+    def __len__(self):
+        """Sepetteki farklı ürün kalemi sayısını döndürür. (Şablonda butonu göstermek için)"""
+        return len(self.cart.keys())
+
     def get_total_price(self):
         """Sepetin genel toplam tutarını hesaplar."""
         return sum(Decimal(item['price']) * Decimal(item['quantity']) for item in self.cart.values())

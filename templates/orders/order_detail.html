@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="mb-4">
+    <a href="{% url 'orders:order_list' %}" class="text-decoration-none text-muted">&larr; Geçmiş Siparişlerime Dön</a>
+    <h2 class="mt-2">Sipariş Detayı (#{{ order.id }})</h2>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white fw-bold py-3">Ürünler</div>
+            <div class="card-body p-0">
+                <table class="table mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Ürün</th>
+                            <th class="text-end">Birim Fiyat</th>
+                            <th class="text-end">Miktar</th>
+                            <th class="text-end">Toplam</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order.items.all %}
+                        <tr>
+                            <td>{{ item.product.name }}</td>
+                            <td class="text-end">{{ item.unit_price }} TL</td>
+                            <td class="text-end">{{ item.quantity }} KG</td>
+                            <td class="text-end fw-bold">{{ item.total_price }} TL</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot class="table-light">
+                        <tr>
+                            <td colspan="3" class="text-end fw-bold">Genel Toplam:</td>
+                            <td class="text-end fw-bold text-success fs-5">{{ order.total_amount }} TL</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white fw-bold py-3">Sipariş Bilgileri</div>
+            <div class="card-body">
+                <p><strong>Durum:</strong> <span class="badge bg-primary">{{ order.get_status_display }}</span></p>
+                <p><strong>Tarih:</strong> {{ order.created_at|date:"d.m.Y H:i" }}</p>
+                <hr>
+                <p><strong>Sipariş Notu:</strong><br>
+                <span class="text-muted">{{ order.order_note|default:"Not eklenmemiş." }}</span></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -21,3 +21,9 @@ class OrderAdmin(admin.ModelAdmin):
 
     # Toplam tutar sepette otomatik hesaplandığı için adminde salt okunur yapıyoruz
     readonly_fields = ['total_amount']
+
+
+# orders/admin.py içinde
+admin.site.site_header = "Kuraş Kuruyemiş Yönetim Paneli"
+admin.site.index_title = "Hoşgeldiniz"
+# (Opsiyonel) Admin ana sayfasına bir buton/link ekleyerek bu görünüme yönlendirebilirsiniz.

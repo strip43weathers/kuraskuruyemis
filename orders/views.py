@@ -1,13 +1,16 @@
+import openpyxl
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib import messages
-from django.db import transaction  # En kritik kütüphanemiz
+from django.db import transaction
 from decimal import Decimal
-
 from products.models import Product
 from .models import Order, OrderItem
 from .cart import Cart
+from .forms import OrderExportForm
+from django.contrib.admin.views.decorators import staff_member_required
+from django.http import HttpResponse
 
 
 @require_POST
@@ -109,3 +112,65 @@ def checkout(request):
 
     # Eğer GET isteği ise, müşteriye sipariş öncesi "Onay" sayfasını göster
     return render(request, 'orders/checkout.html', {'cart': cart})
+
+
+@login_required(login_url='/login/')
+def order_list(request):
+    """Müşterinin geçmiş tüm siparişlerini listeler."""
+    orders = Order.objects.filter(user=request.user)
+    return render(request, 'orders/order_list.html', {'orders': orders})
+
+
+@login_required(login_url='/login/')
+def order_detail(request, order_id):
+    """Belirli bir siparişin içeriğini gösterir."""
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    return render(request, 'orders/order_detail.html', {'order': order})
+
+
+@staff_member_required
+def export_orders_to_excel(request):
+    if request.method == 'POST':
+        form = OrderExportForm(request.POST)
+        if form.is_valid():
+            start = form.cleaned_data['start_date']
+            end = form.cleaned_data['end_date']
+
+            # Belirlenen aralıktaki siparişleri çek (İçindeki kalemlerle birlikte)
+            orders = Order.objects.filter(created_at__range=(start, end)).prefetch_related('items__product', 'user')
+
+            # Excel Çalışma Kitabı Oluştur
+            wb = openpyxl.Workbook()
+            ws = wb.active
+            ws.title = "Sipariş Raporu"
+
+            # Başlık Satırı
+            headers = ['Sipariş No', 'Tarih', 'Müşteri', 'Ürün', 'Miktar (KG)', 'Birim Fiyat', 'Toplam Tutar', 'Durum']
+            ws.append(headers)
+
+            # Verileri Doldur
+            for order in orders:
+                for item in order.items.all():
+                    ws.append([
+                        order.id,
+                        order.created_at.replace(tzinfo=None),  # Excel için timezone temizliği
+                        order.user.username,
+                        item.product.name,
+                        item.quantity,
+                        item.unit_price,
+                        item.total_price,
+                        order.get_status_display()
+                    ])
+
+            # HTTP Yanıtı Hazırla
+            response = HttpResponse(
+                content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            )
+            response['Content-Disposition'] = f'attachment; filename=Siparis_Raporu_{start.date()}_{end.date()}.xlsx'
+
+            wb.save(response)
+            return response
+    else:
+        form = OrderExportForm()
+
+    return render(request, 'orders/admin/export_form.html', {'form': form})
