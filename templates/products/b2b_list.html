@@ -10,11 +10,9 @@
 <div class="card border-0 shadow-sm mb-4 bg-white">
     <div class="card-body p-3">
         <form method="GET" action="{% url 'products:b2b_list' %}" class="row g-2 align-items-center">
-            
             <div class="col-md-5">
                 <input type="text" name="q" class="form-control" placeholder="Ürün adı veya Stok Kodu (SKU) ara..." value="{{ current_query }}">
             </div>
-            
             <div class="col-md-3">
                 <select name="category" class="form-select">
                     <option value="">Tüm Kategoriler</option>
@@ -25,7 +23,6 @@
                     {% endfor %}
                 </select>
             </div>
-            
             <div class="col-md-3">
                 <select name="sort" class="form-select">
                     <option value="newest" {% if current_sort == 'newest' %}selected{% endif %}>Eklenme Tarihi (Yeni)</option>
@@ -34,7 +31,6 @@
                     <option value="name_asc" {% if current_sort == 'name_asc' %}selected{% endif %}>Ürün Adı (A-Z)</option>
                 </select>
             </div>
-            
             <div class="col-md-1 d-flex gap-1">
                 {% if current_query or current_category or current_sort != 'newest' %}
                     <a href="{% url 'products:b2b_list' %}" class="btn btn-outline-secondary w-100" title="Filtreleri Temizle">✖</a>
@@ -55,13 +51,11 @@
                     <span class="fs-1">🥜</span>
                 </div>
             {% endif %}
-        
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-start mb-2">
                     <h5 class="card-title fw-bold mb-0">{{ product.name }}</h5>
                     <span class="badge bg-secondary">{{ product.category.name }}</span>
                 </div>
-                
                 <p class="card-text mb-3">
                     <span class="fs-5 fw-bold text-success">{{ product.wholesale_price }} TL</span> <small class="text-muted">/ kg</small>
                     <br>
@@ -75,13 +69,13 @@
                 <form action="{% url 'orders:cart_add' product.id %}" method="POST">
                     {% csrf_token %}
                     <div class="input-group mb-2">
-                        <input type="number" 
-                               name="quantity" 
-                               class="form-control" 
-                               value="{{ product.minimum_order_quantity }}" 
-                               min="{{ product.minimum_order_quantity }}" 
+                        <input type="number"
+                               name="quantity"
+                               class="form-control"
+                               value="{{ product.minimum_order_quantity }}"
+                               min="{{ product.minimum_order_quantity }}"
                                max="{{ product.stock_quantity }}"
-                               step="0.01" 
+                               step="0.01"
                                required
                                {% if product.stock_quantity <= 0 %}disabled{% endif %}>
                         <span class="input-group-text bg-light">KG</span>
