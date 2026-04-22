@@ -1,0 +1,17 @@
+{% extends "admin/index.html" %}
+
+{% block sidebar %}
+    {{ block.super }}
+    <div class="module">
+        <table style="width:100%">
+            <caption>
+                <a href="#!" class="section">Özel Raporlar</a>
+            </caption>
+            <tr>
+                <th scope="row">
+                    <a href="/siparis/admin/excel-aktar/">Excel Sipariş Raporu</a>
+                </th>
+            </tr>
+        </table>
+    </div>
+{% endblock %}
