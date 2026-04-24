@@ -45,7 +45,23 @@ class Product(models.Model):
         verbose_name="Minimum Sipariş Miktarı (KG)"
     )
 
-    is_active = models.BooleanField(default=True, verbose_name="Satışta mı?")
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="1- Satışta mı? (Ana Şalter)",
+        help_text="İşareti kaldırırsanız ürün sistemden tamamen gizlenir (Sezonu biten veya geçici olarak satışı durdurulan ürünler için kullanın)."
+    )
+
+    is_b2b = models.BooleanField(
+        default=True,
+        verbose_name="2- B2B Bayi Portalında Göster",
+        help_text="Bu ürün, sisteme şifresiyle giriş yapan bayilerin sipariş ekranında (fiyatlarıyla birlikte) listelensin mi?"
+    )
+
+    is_public = models.BooleanField(
+        default=True,
+        verbose_name="3- Halka Açık Vitrinde Göster",
+        help_text="Bu ürün, siteye dışarıdan giren normal ziyaretçilerin genel kataloğunda (fiyat görünmeden) sergilensin mi?"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

@@ -54,3 +54,37 @@ def b2b_product_list(request):
     }
 
     return render(request, 'products/b2b_list.html', context)
+
+
+def public_product_list(request):
+    """Fiyatların ve sepetin olmadığı halka açık katalog."""
+    products = Product.objects.filter(is_active=True, is_public=True).select_related('category')
+    categories = Category.objects.filter(is_active=True)
+
+    query = request.GET.get('q', '')
+    category_id = request.GET.get('category', '')
+
+    if query:
+        products = products.filter(Q(name__icontains=query) | Q(sku__icontains=query))
+    if category_id:
+        products = products.filter(category_id=category_id)
+
+    products = products.order_by('-created_at')
+
+    # Sayfalama
+    paginator = Paginator(products, 12)
+    page_number = request.GET.get('page')
+    try:
+        products_paginated = paginator.page(page_number)
+    except PageNotAnInteger:
+        products_paginated = paginator.page(1)
+    except EmptyPage:
+        products_paginated = paginator.page(paginator.num_pages)
+
+    context = {
+        'products': products_paginated,
+        'categories': categories,
+        'current_query': query,
+        'current_category': category_id,
+    }
+    return render(request, 'products/public_list.html', context)

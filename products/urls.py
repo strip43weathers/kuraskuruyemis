@@ -4,5 +4,6 @@ from . import views
 app_name = 'products'
 
 urlpatterns = [
+    path('katalog/', views.public_product_list, name='public_list'), # Yeni vitrin rotası
     path('b2b-portal/', views.b2b_product_list, name='b2b_list'),
 ]
