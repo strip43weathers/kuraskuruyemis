@@ -7,7 +7,7 @@ from .models import Category, Product
 
 @login_required(login_url='/login/')
 def b2b_product_list(request):
-    products = Product.objects.filter(is_active=True).select_related('category')
+    products = Product.objects.filter(is_active=True, is_b2b=True).select_related('category')
     categories = Category.objects.filter(is_active=True)
 
     query = request.GET.get('q', '')
@@ -63,17 +63,30 @@ def public_product_list(request):
 
     query = request.GET.get('q', '')
     category_id = request.GET.get('category', '')
+    sort_by = request.GET.get('sort', 'newest')  # YENİ: Sıralama parametresi
 
+    # 1. Arama Filtresi
     if query:
-        products = products.filter(Q(name__icontains=query) | Q(sku__icontains=query))
+        products = products.filter(
+            Q(name__icontains=query) | Q(sku__icontains=query)
+        )
+
+    # 2. Kategori Filtresi
     if category_id:
         products = products.filter(category_id=category_id)
 
-    products = products.order_by('-created_at')
+    # 3. YENİ: Sıralama İşlemi (Fiyatlar gizli olduğu için fiyata göre sıralama yok)
+    if sort_by == 'name_asc':
+        products = products.order_by('name')
+    elif sort_by == 'name_desc':
+        products = products.order_by('-name')
+    else:
+        products = products.order_by('-created_at')  # Varsayılan: En yeniler
 
-    # Sayfalama
+    # 4. Sayfalama
     paginator = Paginator(products, 12)
     page_number = request.GET.get('page')
+
     try:
         products_paginated = paginator.page(page_number)
     except PageNotAnInteger:
@@ -86,5 +99,7 @@ def public_product_list(request):
         'categories': categories,
         'current_query': query,
         'current_category': category_id,
+        'current_sort': sort_by,  # YENİ: Seçilen sıralamayı şablona yolluyoruz
     }
+
     return render(request, 'products/public_list.html', context)
