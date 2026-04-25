@@ -19,6 +19,7 @@
         
         body { 
             background-color: #ffffff; 
+            overflow-x: hidden;
             /* Arka plan görseli ayarları buradan silindi, görseli sol sütuna taşıdık */
         }
     </style>
@@ -65,10 +66,12 @@
     <div class="container pb-5">
         <div class="row"> 
             
-            <div class="col-lg-2 d-none d-lg-block">
-                <div style="position: sticky; top: 40px; z-index: 0;">
-                    <img src="{% static 'img/bg-nuts.png' %}" alt="Kuruyemiş" class="img-fluid" style="opacity: 0.95;">
+            <div class="col-lg-2 d-none d-lg-block position-relative">
+                
+                <div style="position: absolute; top: 20px; left: -250px; z-index: 0;">
+                    <img src="{% static 'img/bg-nuts.png' %}" alt="Kuruyemiş" style="width: 500px; opacity: 0.95; max-width: none;">
                 </div>
+                
             </div>
 
             <div class="col-lg-10" style="z-index: 1;"> 
