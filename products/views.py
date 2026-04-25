@@ -3,6 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger  # YENİ: Paginator sınıfları eklendi
 from .models import Category, Product
+from django.contrib import messages
+from django.shortcuts import redirect
 
 
 @login_required(login_url='/login/')
@@ -116,3 +118,29 @@ def public_product_detail(request, pk):
         'product': product,
         'categories': categories
     })
+
+
+def about_us(request):
+    """Hakkımızda Sayfası"""
+    categories = Category.objects.filter(is_active=True)
+    return render(request, 'pages/about.html', {'categories': categories})
+
+
+def faq(request):
+    """Sıkça Sorulan Sorular Sayfası"""
+    categories = Category.objects.filter(is_active=True)
+    return render(request, 'pages/faq.html', {'categories': categories})
+
+
+def contact(request):
+    """İletişim ve Adres Sayfası"""
+    categories = Category.objects.filter(is_active=True)
+
+    if request.method == 'POST':
+        # İleride buraya e-posta gönderme kodu (SMTP) eklenebilir.
+        # Şimdilik sadece başarılı mesajı gösteriyoruz.
+        messages.success(request,
+                         "Mesajınız başarıyla alındı. Müşteri temsilcilerimiz en kısa sürede size dönüş yapacaktır.")
+        return redirect('contact')
+
+    return render(request, 'pages/contact.html', {'categories': categories})
