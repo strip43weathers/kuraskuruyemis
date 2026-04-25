@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger  # YENİ: Paginator sınıfları eklendi
@@ -103,3 +103,16 @@ def public_product_list(request):
     }
 
     return render(request, 'products/public_list.html', context)
+
+
+def public_product_detail(request, pk):
+    """Halka açık tekil ürün detay sayfası."""
+    # Sadece aktif ve vitrin için işaretlenmiş ürünü getir
+    product = get_object_or_404(Product, pk=pk, is_active=True, is_public=True)
+    # Menüdeki kategoriler için
+    categories = Category.objects.filter(is_active=True)
+
+    return render(request, 'products/public_detail.html', {
+        'product': product,
+        'categories': categories
+    })
