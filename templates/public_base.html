@@ -46,35 +46,6 @@
         .top-bar a { color: #e0d8d3; text-decoration: none; margin-left: 20px; transition: 0.3s; }
         .top-bar a:hover { color: var(--brand-accent); }
 
-        /* Main Nav */
-        .navbar-brand h2 { font-weight: 700; letter-spacing: -0.5px; margin: 0; }
-        .search-box { 
-            border-radius: 50px; 
-            background-color: #fff; 
-            border: 1px solid #eaeaea; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-            transition: all 0.3s ease;
-        }
-        .search-box:focus-within {
-            border-color: var(--brand-accent);
-            box-shadow: 0 4px 15px rgba(197, 131, 43, 0.15);
-        }
-        .search-box input { background: transparent; border: none; box-shadow: none; font-size: 0.95rem; }
-        .search-box input:focus { outline: none; box-shadow: none; }
-
-        /* Category Menu */
-        .category-nav { border-top: 1px solid #eaeaea; border-bottom: 1px solid #eaeaea; background: #fff; }
-        .category-nav a { 
-            color: #555; text-decoration: none; padding: 15px 20px; font-size: 0.95rem; font-weight: 500;
-            position: relative; transition: color 0.3s ease;
-        }
-        .category-nav a:hover { color: var(--brand-accent); }
-        .category-nav a::after {
-            content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 50%;
-            background-color: var(--brand-accent); transition: all 0.3s ease; transform: translateX(-50%);
-        }
-        .category-nav a:hover::after { width: 100%; }
-
         /* Custom Buttons */
         .btn-brand {
             background-color: var(--brand-primary); color: #fff; border: none;
@@ -96,13 +67,13 @@
         
         /* Footer için Özel Renk Tanımı */
         .custom-footer {
-            background-color: #311d10; /* Logodaki renk tonu */
+            background-color: #311d10;
             color: #ffffff;
             position: relative;
             z-index: 10;
         }
         .custom-footer .text-secondary {
-            color: rgba(255, 255, 255, 0.7) !important; /* Yazıların okunurluğu için */
+            color: rgba(255, 255, 255, 0.7) !important;
         }
         
         /* Bg Image Styling */
@@ -134,6 +105,64 @@
             transform: scale(1.1) translateY(-5px);
             box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6);
         }
+
+        /* Navbar Modernizasyonu */
+        .navbar {
+            background-color: #fff !important;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: var(--brand-primary) !important;
+            padding: 0.5rem 1rem !important;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--brand-accent) !important;
+        }
+
+        .navbar-toggler {
+            border: none;
+            padding: 0;
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+
+        .search-box { 
+            border-radius: 50px; 
+            background-color: #f8f9fa; 
+            border: 1px solid #eaeaea; 
+            transition: all 0.3s ease;
+        }
+        .search-box:focus-within {
+            border-color: var(--brand-accent);
+            box-shadow: 0 0 0 0.2rem rgba(197, 131, 43, 0.15);
+            background-color: #fff;
+        }
+        .search-box input { background: transparent; border: none; box-shadow: none; font-size: 0.95rem; }
+        .search-box input:focus { outline: none; box-shadow: none; }
+
+        /* Mobilde arama çubuğunu ve menüyü daha düzgün gösterir */
+        @media (max-width: 991.98px) {
+            .navbar-collapse {
+                background: #fff;
+                padding: 1rem;
+                border-radius: 12px;
+                margin-top: 1rem;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            }
+            
+            .search-box {
+                margin: 1rem 0;
+                width: 100% !important;
+                max-width: none !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -143,44 +172,63 @@
             <div>
                 <a href="{% url 'about' %}">Hakkımızda</a>
                 <a href="{% url 'contact' %}">İletişim</a>
-                <a href="{% url 'login' %}"><i class="bi bi-person-fill me-1"></i> B2B Bayi Girişi</a>
             </div>
         </div>
     </div>
 
-    <div class="container py-4">
-        <div class="row align-items-center">
-            <div class="col-md-3 text-center text-md-start mb-3 mb-md-0">
-                <a href="{% url 'home' %}" class="text-decoration-none">
-                    <h2 class="brand-font mb-0" style="font-size: 2.2rem; font-style: italic; color: #311d10;">Kuraş</h2>
-                    <span style="font-size: 0.75rem; letter-spacing: 2px; color: #888; text-transform: uppercase;">Kuruyemiş</span>
-                </a>
-            </div>
-            <div class="col-md-6">
-                <form action="{% url 'home' %}" method="GET" class="search-box d-flex px-3 py-2">
-                    <input type="text" name="q" class="form-control" placeholder="Taze ürünlerimizde arama yapın..." value="{{ current_query }}">
+    <nav class="navbar navbar-expand-lg sticky-top py-3">
+        <div class="container">
+            <a class="navbar-brand d-flex flex-column" href="{% url 'home' %}">
+                <h2 class="brand-font mb-0" style="font-size: 1.8rem; font-style: italic; color: #311d10; line-height: 1;">Kuraş</h2>
+                <span style="font-size: 0.6rem; letter-spacing: 2px; color: #888; text-transform: uppercase;">Kuruyemiş</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+                <span class="bi bi-list fs-1" style="color: var(--brand-primary);"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">Tüm Ürünler</a>
+                    </li>
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            Kategoriler
+                        </a>
+                        <ul class="dropdown-menu border-0 shadow-sm rounded-3">
+                            {% for cat in categories %}
+                                <li><a class="dropdown-item py-2" href="{% url 'home' %}?category={{ cat.id }}">{{ cat.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'about' %}">Hakkımızda</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'contact' %}">İletişim</a>
+                    </li>
+                </ul>
+
+                <form action="{% url 'home' %}" method="GET" class="search-box d-flex px-3 py-1 me-lg-3" style="max-width: 300px;">
+                    <input type="text" name="q" class="form-control" placeholder="Taze ürünlerimizde ara..." value="{{ current_query|default:'' }}">
                     {% if current_category %}<input type="hidden" name="category" value="{{ current_category }}">{% endif %}
                     {% if current_sort %}<input type="hidden" name="sort" value="{{ current_sort }}">{% endif %}
-                    <button type="submit" class="btn btn-link p-0" style="color: var(--brand-accent);"><i class="bi bi-search fs-5"></i></button>
+                    <button type="submit" class="btn btn-link p-0" style="color: var(--brand-accent);"><i class="bi bi-search"></i></button>
                 </form>
-            </div>
-            <div class="col-md-3 text-end d-none d-md-block">
+
+                <div class="d-flex align-items-center mt-3 mt-lg-0">
+                    <a href="{% url 'login' %}" class="btn btn-outline-brand px-4 py-2 w-100">
+                        <i class="bi bi-person-fill me-1"></i> Bayi Girişi
+                    </a>
                 </div>
-        </div>
-    </div>
-
-    <div class="category-nav d-none d-md-block mb-5">
-        <div class="container">
-            <div class="d-flex justify-content-center flex-wrap">
-                <a href="{% url 'home' %}">Tüm Ürünler</a>
-                {% for cat in categories %}
-                    <a href="{% url 'home' %}?category={{ cat.id }}">{{ cat.name }}</a>
-                {% endfor %}
             </div>
         </div>
-    </div>
+    </nav>
 
-    <div class="container pb-5 content-wrapper flex-grow-1">
+    <div class="container pb-5 content-wrapper flex-grow-1 mt-4">
         <div class="row">
             <div class="col-lg-2 d-none d-lg-block position-relative">
                 <div class="bg-nuts-container">
@@ -232,6 +280,7 @@
             </div>
         </div>
     </footer>
+    
     <a href="https://wa.me/905551234567" class="whatsapp-float" target="_blank" title="WhatsApp'tan Bize Ulaşın">
         <i class="bi bi-whatsapp"></i>
     </a>
