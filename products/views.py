@@ -2,9 +2,11 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger  # YENİ: Paginator sınıfları eklendi
-from .models import Category, Product
+from .models import Category, Product, ContactMessage
 from django.contrib import messages
 from django.shortcuts import redirect
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 @login_required(login_url='/login/')
@@ -137,10 +139,21 @@ def contact(request):
     categories = Category.objects.filter(is_active=True)
 
     if request.method == 'POST':
-        # İleride buraya e-posta gönderme kodu (SMTP) eklenebilir.
-        # Şimdilik sadece başarılı mesajı gösteriyoruz.
-        messages.success(request,
-                         "Mesajınız başarıyla alındı. Müşteri temsilcilerimiz en kısa sürede size dönüş yapacaktır.")
+        # Formdaki 'name', 'phone', 'email' ve 'message' alanlarını yakala
+        name = request.POST.get('name')
+        phone = request.POST.get('phone')
+        email = request.POST.get('email')
+        message_text = request.POST.get('message')
+
+        # Veritabanına kaydet
+        ContactMessage.objects.create(
+            name=name,
+            phone=phone,
+            email=email,
+            message=message_text
+        )
+
+        messages.success(request, "Mesajınız başarıyla alındı. En kısa sürede size dönüş yapılacaktır.")
         return redirect('contact')
 
     return render(request, 'pages/contact.html', {'categories': categories})
