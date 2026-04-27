@@ -2,65 +2,81 @@
 {% block content %}
 
 {% if messages %}
+    <div class="mt-4">
     {% for message in messages %}
-        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
-            <i class="bi bi-check-circle-fill me-2"></i> {{ message }}
+        <div class="alert alert-success alert-dismissible fade show premium-card border-0 border-start border-4 border-success" role="alert">
+            <i class="bi bi-check-circle-fill me-2 text-success"></i> {{ message }}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     {% endfor %}
+    </div>
 {% endif %}
 
-<div class="row mb-5">
-    <div class="col-md-5 mb-4">
-        <h2 class="fw-bold mb-4">İletişim Bilgilerimiz</h2>
+<div class="row mt-5 mb-5 g-5">
+    <div class="col-lg-5">
+        <h2 class="brand-font fw-bold mb-4">Bize Ulaşın</h2>
+        <p class="text-muted mb-5">Soru, görüş ve toptan alım talepleriniz için aşağıdaki iletişim kanallarından bize ulaşabilir veya iletişim formunu doldurabilirsiniz.</p>
         
-        <div class="d-flex align-items-center mb-3 text-muted">
-            <i class="bi bi-geo-alt-fill fs-3 text-dark me-3"></i>
-            <span><strong>Merkez Ofis & Fabrika:</strong><br>Organize Sanayi Bölgesi 1. Cad. No:15 Merkez/Türkiye</span>
+        <div class="d-flex align-items-center mb-4 premium-card p-3">
+            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                <i class="bi bi-geo-alt-fill fs-5" style="color: var(--brand-accent);"></i>
+            </div>
+            <div>
+                <h6 class="fw-bold mb-1">Merkez Ofis & Fabrika</h6>
+                <span class="text-muted small">Organize Sanayi Bölgesi 1. Cad. No:15 Merkez/Türkiye</span>
+            </div>
         </div>
         
-        <div class="d-flex align-items-center mb-3 text-muted">
-            <i class="bi bi-telephone-fill fs-3 text-dark me-3"></i>
-            <span><strong>Müşteri Hizmetleri:</strong><br>0850 XXX XX XX</span>
+        <div class="d-flex align-items-center mb-4 premium-card p-3">
+            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                <i class="bi bi-telephone-fill fs-5" style="color: var(--brand-accent);"></i>
+            </div>
+            <div>
+                <h6 class="fw-bold mb-1">Müşteri Hizmetleri</h6>
+                <span class="text-muted small">0850 XXX XX XX</span>
+            </div>
         </div>
         
-        <div class="d-flex align-items-center mb-4 text-muted">
-            <i class="bi bi-envelope-fill fs-3 text-dark me-3"></i>
-            <span><strong>E-Posta:</strong><br>info@kuraskuruyemis.com</span>
-        </div>
-
-        <div class="rounded-4 overflow-hidden shadow-sm bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
-            <span class="text-muted"><i class="bi bi-map"></i> İnteraktif Harita Alanı</span>
+        <div class="d-flex align-items-center mb-4 premium-card p-3">
+            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                <i class="bi bi-envelope-fill fs-5" style="color: var(--brand-accent);"></i>
+            </div>
+            <div>
+                <h6 class="fw-bold mb-1">E-Posta</h6>
+                <span class="text-muted small">info@kuraskuruyemis.com</span>
+            </div>
         </div>
     </div>
 
-    <div class="col-md-7">
-        <div class="card border-0 shadow-sm rounded-4">
-            <div class="card-body p-4 p-md-5">
-                <h4 class="fw-bold mb-4">Bize Mesaj Gönderin</h4>
-                <form method="POST" action="{% url 'contact' %}">
-                    {% csrf_token %}
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Adınız Soyadınız</label>
-                            <input type="text" name="name" class="form-control" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Telefon Numaranız</label>
-                            <input type="tel" name="phone" class="form-control" required>
+    <div class="col-lg-7">
+        <div class="premium-card p-4 p-md-5">
+            <h4 class="brand-font fw-bold mb-4">Mesaj Gönderin</h4>
+            <form method="POST" action="{% url 'contact' %}">
+                {% csrf_token %}
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="text" name="name" class="form-control bg-light border-0" id="nameInput" placeholder="Adınız Soyadınız" required>
+                            <label for="nameInput">Adınız Soyadınız</label>
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">E-Posta Adresiniz</label>
-                        <input type="email" name="email" class="form-control" required>
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="tel" name="phone" class="form-control bg-light border-0" id="phoneInput" placeholder="Telefon Numaranız" required>
+                            <label for="phoneInput">Telefon Numaranız</label>
+                        </div>
                     </div>
-                    <div class="mb-4">
-                        <label class="form-label fw-bold">Mesajınız</label>
-                        <textarea name="message" rows="5" class="form-control" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-dark w-100 py-2 fw-bold">Mesajı Gönder</button>
-                </form>
-            </div>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="email" name="email" class="form-control bg-light border-0" id="emailInput" placeholder="E-Posta Adresiniz" required>
+                    <label for="emailInput">E-Posta Adresiniz</label>
+                </div>
+                <div class="form-floating mb-4">
+                    <textarea name="message" class="form-control bg-light border-0" id="messageInput" placeholder="Mesajınız" style="height: 150px" required></textarea>
+                    <label for="messageInput">Mesajınız</label>
+                </div>
+                <button type="submit" class="btn btn-brand w-100 py-3 fs-6">Mesajı Gönder</button>
+            </form>
         </div>
     </div>
 </div>

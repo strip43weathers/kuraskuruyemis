@@ -1,29 +1,43 @@
 {% extends "public_base.html" %}
 {% block content %}
-<div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5">
-    <div class="card-header bg-dark text-white p-4 text-center">
-        <h2 class="fw-bold mb-0">Hakkımızda</h2>
+<div class="premium-card overflow-hidden mb-5 mt-4">
+    <div class="position-relative py-5 text-center" style="background: linear-gradient(135deg, var(--brand-primary), #2c1a0f); color: white;">
+        <div class="position-relative z-1 py-4">
+            <h1 class="brand-font display-5 fw-bold mb-3">Köklü Geçmiş, Doğal Lezzet</h1>
+            <p class="lead fw-light opacity-75 mx-auto" style="max-width: 600px;">Tarladan sofralarınıza uzanan tazelik yolculuğu.</p>
+        </div>
+        <i class="bi bi-tree position-absolute opacity-10" style="font-size: 15rem; right: 5%; top: -20%;"></i>
     </div>
-    <div class="card-body p-md-5 text-secondary" style="line-height: 1.8;">
-        <h4 class="text-dark fw-bold mb-3">Kuraş Kuruyemiş: Taptaze Lezzetlerin Adresi</h4>
-        <p>1990'lı yıllardan beri kuruyemiş sektöründe kalite ve tazeliği misyon edinen firmamız, tarladan sofranıza uzanan lezzet yolculuğunda en güvenilir köprü olmayı hedeflemektedir.</p>
-        <p>Özenle seçilmiş yöresel mahsulleri, en modern kavurma teknikleriyle işliyor; tazeliğini ve besin değerini koruyarak B2B bayilerimize ve perakende müşterilerimize ulaştırıyoruz.</p>
+
+    <div class="p-4 p-md-5 text-secondary" style="line-height: 1.9; font-size: 1.05rem;">
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-10 text-center">
+                <p class="mb-4">1990'lı yıllardan beri kuruyemiş sektöründe kalite ve tazeliği misyon edinen firmamız, tarladan sofranıza uzanan lezzet yolculuğunda en güvenilir köprü olmayı hedeflemektedir.</p>
+                <p>Özenle seçilmiş yöresel mahsulleri, en modern kavurma teknikleriyle işliyor; tazeliğini ve besin değerini koruyarak B2B bayilerimize ve perakende müşterilerimize ulaştırıyoruz. Kuruyemişin en doğal halini, hiç bir kaliteden ödün vermeden sunmak en büyük gururumuzdur.</p>
+            </div>
+        </div>
         
-        <div class="row mt-5 text-center">
-            <div class="col-md-4 mb-3">
-                <i class="bi bi-shield-check display-4 text-success mb-2"></i>
-                <h5 class="fw-bold text-dark">Kalite Garantisi</h5>
-                <p class="small">Tüm ürünlerimiz sıkı kalite kontrol süreçlerinden geçer.</p>
+        <div class="row mt-5 text-center g-4">
+            <div class="col-md-4">
+                <div class="p-4 h-100 rounded-4 bg-light">
+                    <i class="bi bi-shield-check display-5 mb-3 d-block" style="color: var(--brand-accent);"></i>
+                    <h5 class="brand-font fw-bold text-dark">Kalite Garantisi</h5>
+                    <p class="small mb-0">Tüm ürünlerimiz sıkı kalite kontrol süreçlerinden geçer ve el değmeden paketlenir.</p>
+                </div>
             </div>
-            <div class="col-md-4 mb-3">
-                <i class="bi bi-truck display-4 text-primary mb-2"></i>
-                <h5 class="fw-bold text-dark">Hızlı Teslimat</h5>
-                <p class="small">Toptan siparişleriniz Türkiye'nin her yerine güvenle ulaştırılır.</p>
+            <div class="col-md-4">
+                <div class="p-4 h-100 rounded-4 bg-light">
+                    <i class="bi bi-truck display-5 mb-3 d-block" style="color: var(--brand-accent);"></i>
+                    <h5 class="brand-font fw-bold text-dark">Hızlı Teslimat</h5>
+                    <p class="small mb-0">Toptan siparişleriniz tazeliğini yitirmeden Türkiye'nin her yerine güvenle ulaştırılır.</p>
+                </div>
             </div>
-            <div class="col-md-4 mb-3">
-                <i class="bi bi-tree display-4 text-warning mb-2"></i>
-                <h5 class="fw-bold text-dark">Doğal ve Katkısız</h5>
-                <p class="small">Ürünlerimizde hiçbir yapay koruyucu madde bulunmaz.</p>
+            <div class="col-md-4">
+                <div class="p-4 h-100 rounded-4 bg-light">
+                    <i class="bi bi-flower1 display-5 mb-3 d-block" style="color: var(--brand-accent);"></i>
+                    <h5 class="brand-font fw-bold text-dark">Doğal ve Katkısız</h5>
+                    <p class="small mb-0">Ürünlerimizde hiçbir yapay koruyucu ve tatlandırıcı madde bulunmaz.</p>
+                </div>
             </div>
         </div>
     </div>

@@ -1,33 +1,50 @@
 {% extends "public_base.html" %}
 
 {% block content %}
-<div class="row mt-5">
-    <div class="col-md-6 mb-4">
-        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-            {% if product.image %}
-                <img src="{{ product.image.url }}" class="img-fluid" alt="{{ product.name }}">
-            {% else %}
-                <div class="bg-light d-flex align-items-center justify-content-center" style="height: 450px;">
-                    <i class="bi bi-image fs-1 text-muted"></i>
-                </div>
-            {% endif %}
+<div class="premium-card p-4 p-md-5 mt-4">
+    <div class="row align-items-center">
+        <div class="col-md-6 mb-4 mb-md-0">
+            <div class="rounded-4 overflow-hidden shadow-sm" style="background: #f8f9fa;">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" class="img-fluid w-100" alt="{{ product.name }}" style="object-fit: cover; max-height: 500px;">
+                {% else %}
+                    <div class="d-flex align-items-center justify-content-center" style="height: 400px;">
+                        <i class="bi bi-camera fs-1 text-muted opacity-25"></i>
+                    </div>
+                {% endif %}
+            </div>
         </div>
-    </div>
 
-    <div class="col-md-6 ps-md-5">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none">Anasayfa</a></li>
-                <li class="breadcrumb-item active">{{ product.category.name }}</li>
-            </ol>
-        </nav>
+        <div class="col-md-6 ps-md-5">
+            <nav aria-label="breadcrumb" class="mb-3">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none text-muted">Katalog</a></li>
+                    <li class="breadcrumb-item active text-dark fw-medium">{{ product.category.name }}</li>
+                </ol>
+            </nav>
 
-        <h1 class="fw-bold mb-3">{{ product.name }}</h1>
-        <div class="badge bg-secondary mb-4">{{ product.sku }}</div>
+            <h1 class="brand-font fw-bold mb-2">{{ product.name }}</h1>
+            
+            <div class="d-flex align-items-center gap-3 mb-4 pb-4 border-bottom">
+                <span class="badge bg-light text-dark border px-3 py-2 rounded-pill"><i class="bi bi-upc-scan me-2"></i>SKU: {{ product.sku }}</span>
+            </div>
 
-        <div class="product-description text-secondary" style="line-height: 1.8;">
-            <h5 class="text-dark fw-bold border-bottom pb-2 mb-3">Ürün Açıklaması</h5>
-            {{ product.description|linebreaks }}
+            <div class="product-description text-secondary mb-5" style="line-height: 1.9; font-size: 1.05rem;">
+                <h5 class="brand-font text-dark mb-3">Ürün Hakkında</h5>
+                {{ product.description|linebreaks }}
+            </div>
+
+            <div class="bg-light p-4 rounded-4">
+                <div class="d-flex align-items-center">
+                    <div class="me-3">
+                        <i class="bi bi-info-circle fs-3" style="color: var(--brand-accent);"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">Toptan Fiyatlandırma</h6>
+                        <p class="small text-muted mb-0">Bu ürünün fiyatlarını görmek ve sipariş vermek için <a href="{% url 'login' %}" class="text-decoration-none fw-bold" style="color: var(--brand-primary);">bayi girişi</a> yapmalısınız.</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
