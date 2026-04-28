@@ -1,9 +1,13 @@
 .venv
 
+# Çevresel Değişkenler (Şifrelerin asla GitHub'a gitmemeli!)
 .env
 
-.idea
+# Kullanıcı veya Admin tarafından yüklenen dinamik dosyalar
+media/
 
+# Veritabanı dosyaları (Eğer lokalde SQLite kullanıyorsan)
 db.sqlite3
 
-media
+# Statik dosyaların toplandığı klasör
+staticfiles/
