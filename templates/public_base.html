@@ -81,7 +81,7 @@
         /* YENİ: Ekrana değil sayfaya yapışan mutlak görsel */
         .bg-nuts-container { 
             position: absolute; 
-            top: 150px; 
+            top: 120px; 
             left: 0; 
             z-index: 0; 
             opacity: 0.8; 
@@ -223,7 +223,7 @@
                 </ul>
 
                 <form action="{% url 'home' %}" method="GET" class="search-box d-flex px-3 py-1 me-lg-3" style="max-width: 300px;">
-                    <input type="text" name="q" class="form-control" placeholder="Taze ürünlerimizde ara..." value="{{ current_query|default:'' }}">
+                    <input type="text" name="q" class="form-control" placeholder="Ürünlerimizde ara..." value="{{ current_query|default:'' }}">
                     {% if current_category %}<input type="hidden" name="category" value="{{ current_category }}">{% endif %}
                     {% if current_sort %}<input type="hidden" name="sort" value="{{ current_sort }}">{% endif %}
                     <button type="submit" class="btn btn-link p-0" style="color: var(--brand-accent);"><i class="bi bi-search"></i></button>

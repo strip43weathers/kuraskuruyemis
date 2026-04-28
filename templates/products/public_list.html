@@ -11,7 +11,10 @@
         transform: translateY(-8px);
         box-shadow: 0 15px 35px rgba(0,0,0,0.08) !important;
     }
+    
+    /* YENİ EKLENEN MOBİL UYUMLU KISIM */
     .product-img-wrapper {
+        height: 150px; 
         overflow: hidden;
         position: relative;
     }
@@ -21,6 +24,20 @@
     .product-card:hover .product-img-wrapper img {
         transform: scale(1.08);
     }
+    .product-card-title {
+        font-size: 0.95rem; /* Mobilde başlık biraz daha küçük */
+    }
+    
+    /* Masaüstü ekranlarda orijinal boyutlara dön (768px ve üzeri) */
+    @media (min-width: 768px) {
+        .product-img-wrapper {
+            height: 260px;
+        }
+        .product-card-title {
+            font-size: 1.25rem;
+        }
+    }
+    
     .filter-bar {
         background: #fff;
         border-radius: 12px;
@@ -60,27 +77,33 @@
     </form>
 </div>
 
-<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+<div class="row row-cols-2 row-cols-md-3 g-2 g-md-4">
     {% for product in products %}
     <div class="col">
         <div class="card h-100 border-0 shadow-sm product-card bg-white">
-            <div class="product-img-wrapper" style="height: 260px; background: #f8f9fa;">
+            
+            <div class="product-img-wrapper" style="background: #f8f9fa;">
                 {% if product.image %}
                     <img src="{{ product.image.url }}" class="w-100 h-100" alt="{{ product.name }}" style="object-fit: cover;">
                 {% else %}
                     <div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted">
-                        <i class="bi bi-image" style="font-size: 3rem; opacity: 0.2;"></i>
+                        <i class="bi bi-image" style="font-size: 2rem; opacity: 0.2;"></i>
                     </div>
                 {% endif %}
             </div>
             
-            <div class="card-body text-center p-4 d-flex flex-column">
-                <span class="badge bg-light text-secondary border mb-2 align-self-center rounded-pill px-3">{{ product.category.name }}</span>
-                <h5 class="card-title brand-font fw-bold text-dark mb-3">{{ product.name }}</h5>
-                <p class="card-text small text-muted mb-4 flex-grow-1" style="line-height: 1.6;">
+            <div class="card-body text-center p-2 p-md-4 d-flex flex-column">
+                <span class="badge bg-light text-secondary border mb-1 mb-md-2 align-self-center rounded-pill px-2 px-md-3" style="font-size: 0.7rem;">{{ product.category.name }}</span>
+                
+                <h5 class="card-title brand-font fw-bold text-dark mb-2 mb-md-3 product-card-title">{{ product.name }}</h5>
+                
+                <p class="card-text small text-muted mb-3 flex-grow-1 d-none d-md-block" style="line-height: 1.6;">
                     {{ product.description|truncatechars:80 }}
                 </p>
-                <a href="{% url 'products:public_detail' product.id %}" class="btn btn-outline-brand w-100 py-2">Ürünü İncele</a>
+                
+                <div class="mt-auto">
+                    <a href="{% url 'products:public_detail' product.id %}" class="btn btn-outline-brand w-100 py-1 py-md-2" style="font-size: 0.85rem;">Ürünü İncele</a>
+                </div>
             </div>
         </div>
     </div>

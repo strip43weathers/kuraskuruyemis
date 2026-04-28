@@ -88,7 +88,7 @@ def public_product_list(request):
         products = products.order_by('-created_at')  # Varsayılan: En yeniler
 
     # 4. Sayfalama
-    paginator = Paginator(products, 12)
+    paginator = Paginator(products, 6)
     page_number = request.GET.get('page')
 
     try:

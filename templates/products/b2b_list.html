@@ -1,12 +1,75 @@
 {% extends "base.html" %}
 
 {% block content %}
+<style>
+    /* B2B Kartlarına Özel Mobil Uyumlu Stiller */
+    .b2b-product-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    .b2b-product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important;
+    }
+    
+    .product-img-wrapper {
+        height: 140px; /* B2B kartlarında altta form olduğu için görsel mobilde biraz daha kısa */
+        overflow: hidden;
+        position: relative;
+    }
+    .product-img-wrapper img {
+        transition: transform 0.5s ease;
+    }
+    .b2b-product-card:hover .product-img-wrapper img {
+        transform: scale(1.08);
+    }
+    
+    .product-card-title {
+        font-size: 0.95rem; 
+    }
+    .price-text {
+        font-size: 1rem;
+    }
+
+    /* Mobilde Sepete Ekle formunun sığması için daraltmalar */
+    .cart-input-group {
+        flex-wrap: nowrap;
+    }
+    .cart-input-group .form-control, 
+    .cart-input-group .btn, 
+    .cart-input-group .input-group-text {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.85rem;
+    }
+    
+    /* Masaüstü Ekranlar İçin (768px ve üzeri) Orijinal Boyutlar */
+    @media (min-width: 768px) {
+        .product-img-wrapper {
+            height: 200px;
+        }
+        .product-card-title {
+            font-size: 1.15rem;
+        }
+        .price-text {
+            font-size: 1.25rem;
+        }
+        .cart-input-group .form-control, 
+        .cart-input-group .btn, 
+        .cart-input-group .input-group-text {
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+        }
+    }
+</style>
+
 <div class="row mb-4 align-items-center">
     <div class="col">
         <h2 class="mb-0">Toptan Sipariş Ekranı</h2>
         <p class="text-muted">Hoş geldiniz, {{ request.user.username }}. Sipariş vermek istediğiniz miktarları kilogram (KG) cinsinden giriniz.</p>
     </div>
 </div>
+
 <div class="card border-0 shadow-sm mb-4 bg-white">
     <div class="card-body p-3">
         <form method="GET" action="{% url 'products:b2b_list' %}" class="row g-2 align-items-center">
@@ -40,35 +103,43 @@
         </form>
     </div>
 </div>
-<div class="row row-cols-1 row-cols-md-3 g-4">
+
+<div class="row row-cols-2 row-cols-md-3 g-2 g-md-4">
     {% for product in products %}
     <div class="col">
-        <div class="card h-100 border-0 shadow-sm">
-            {% if product.image %}
-                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
-            {% else %}
-                <div class="card-img-top bg-light d-flex align-items-center justify-content-center text-muted" style="height: 200px;">
-                    <span class="fs-1">🥜</span>
+        <div class="card h-100 border-0 shadow-sm b2b-product-card bg-white">
+            
+            <div class="product-img-wrapper bg-light">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" class="w-100 h-100" alt="{{ product.name }}" style="object-fit: cover;">
+                {% else %}
+                    <div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted">
+                        <span class="fs-1">🥜</span>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="card-body p-2 p-md-3 d-flex flex-column">
+                
+                <div class="d-flex justify-content-between align-items-start mb-1 mb-md-2">
+                    <h5 class="card-title fw-bold mb-0 product-card-title">{{ product.name }}</h5>
+                    <span class="badge bg-secondary d-none d-md-inline-block">{{ product.category.name }}</span>
                 </div>
-            {% endif %}
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start mb-2">
-                    <h5 class="card-title fw-bold mb-0">{{ product.name }}</h5>
-                    <span class="badge bg-secondary">{{ product.category.name }}</span>
-                </div>
-                <p class="card-text mb-3">
-                    <span class="fs-5 fw-bold text-success">{{ product.wholesale_price }} TL</span> <small class="text-muted">/ kg</small>
+                <span class="badge bg-secondary d-md-none align-self-start mb-2" style="font-size: 0.65rem;">{{ product.category.name }}</span>
+
+                <p class="card-text mb-3 flex-grow-1">
+                    <span class="fw-bold text-success price-text">{{ product.wholesale_price }} TL</span> <small class="text-muted">/ kg</small>
                     <br>
                     {% if product.stock_quantity > 0 %}
-                        <small class="text-success">Mevcut Stok: {{ product.stock_quantity }} kg</small>
+                        <small class="text-success d-block mt-1" style="font-size: 0.75rem;">Stok: {{ product.stock_quantity }} kg</small>
                     {% else %}
-                        <small class="text-danger fw-bold">Tükendi</small>
+                        <small class="text-danger fw-bold d-block mt-1" style="font-size: 0.75rem;">Tükendi</small>
                     {% endif %}
                 </p>
 
-                <form action="{% url 'orders:cart_add' product.id %}" method="POST">
+                <form action="{% url 'orders:cart_add' product.id %}" method="POST" class="mt-auto">
                     {% csrf_token %}
-                    <div class="input-group mb-2">
+                    <div class="input-group cart-input-group mb-1">
                         <input type="number"
                                name="quantity"
                                class="form-control"
@@ -78,12 +149,14 @@
                                step="0.01"
                                required
                                {% if product.stock_quantity <= 0 %}disabled{% endif %}>
-                        <span class="input-group-text bg-light">KG</span>
+                        
+                        <span class="input-group-text bg-light d-none d-sm-block">KG</span>
+                        
                         <button type="submit" class="btn btn-dark" {% if product.stock_quantity <= 0 %}disabled{% endif %}>
                             Ekle
                         </button>
                     </div>
-                    <small class="text-muted" style="font-size: 0.8rem;">Min. Sipariş: {{ product.minimum_order_quantity }} kg</small>
+                    <small class="text-muted d-block text-center text-md-start" style="font-size: 0.7rem;">Min. Sipariş: {{ product.minimum_order_quantity }} kg</small>
                 </form>
 
             </div>
@@ -96,10 +169,11 @@
         </div>
     </div>
     {% endfor %}
+
 {% if products.has_other_pages %}
-<nav aria-label="Ürün Sayfalama" class="mt-5 mb-4">
+<nav aria-label="Ürün Sayfalama" class="mt-5 mb-4 col-12">
     <ul class="pagination justify-content-center">
-        
+
         {% if products.has_previous %}
             <li class="page-item">
                 <a class="page-link text-dark" href="?page={{ products.previous_page_number }}&q={{ current_query }}&category={{ current_category }}&sort={{ current_sort }}">&laquo; Önceki</a>
@@ -131,7 +205,7 @@
                 <span class="page-link">Sonraki &raquo;</span>
             </li>
         {% endif %}
-        
+
     </ul>
 </nav>
 {% endif %}
