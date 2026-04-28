@@ -11,7 +11,25 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-fallback-key')
 
 # .env'den gelen değer string olduğu için onu Python boolean türüne çeviriyoruz
+# Mevcut satırın (Buna dokunmuyoruz)
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
+
+# --- YENİ EKLENECEK GÜVENLİK BLOĞU ---
+if not DEBUG:
+    # 1. Tüm HTTP trafiğini otomatik olarak HTTPS'e yönlendirir
+    SECURE_SSL_REDIRECT = True
+
+    # 2. Oturum ve form güvenlik çerezlerinin sadece HTTPS üzerinden iletilmesini sağlar
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
+    # 3. Tarayıcının XSS (Cross-Site Scripting) ve içerik türü manipülasyonu korumalarını açar
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+
+    # 4. Gunicorn/Nginx arkasında çalışırken Django'nun HTTPS trafiğini doğru algılamasını sağlar
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 
 # Virgülle ayrılmış hostları listeye çeviriyoruz
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
@@ -66,6 +84,7 @@ DATABASES = {
         'PASSWORD': os.getenv('DB_PASSWORD'),
         'HOST': 'db',
         'PORT': '5432',
+        'CONN_MAX_AGE': 300,
     }
 }
 
@@ -112,3 +131,35 @@ CART_SESSION_ID = 'b2b_cart'
 
 
 LOGIN_REDIRECT_URL = '/urunler/b2b-portal/'
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[{asctime}] {levelname} [{module}] {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',  # Canlıda sadece INFO, WARNING, ERROR mesajlarını göster
+            'propagate': True,
+        },
+        # Sipariş oluştururken (checkout vs.) oluşacak hataları yakalamak için
+        'orders': {
+            'handlers': ['console'],
+            'level': 'WARNING',
+            'propagate': True,
+        },
+    },
+}
