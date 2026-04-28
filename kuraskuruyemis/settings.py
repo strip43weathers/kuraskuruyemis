@@ -1,13 +1,20 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+# .env dosyasını yükle
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-72$#c!3kiv)4p4wb=%z&8dlfr9uh#ve+&)us^wob0ydd8nn5z4'
+# .env'den şifreyi okur, bulamazsa hata vermemesi için sahte bir şifre atar
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-fallback-key')
 
-DEBUG = True
+# .env'den gelen değer string olduğu için onu Python boolean türüne çeviriyoruz
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = []
+# Virgülle ayrılmış hostları listeye çeviriyoruz
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -22,6 +29,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -53,9 +61,9 @@ WSGI_APPLICATION = 'kuraskuruyemis.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'kuruyemis_b2b',
-        'USER': 'b2b_user',
-        'PASSWORD': 'b2b_pass',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
         'HOST': 'db',
         'PORT': '5432',
     }
@@ -90,6 +98,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

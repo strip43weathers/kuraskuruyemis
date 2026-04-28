@@ -6,17 +6,22 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_DB=kuruyemis_b2b
-      - POSTGRES_USER=b2b_user
-      - POSTGRES_PASSWORD=b2b_pass
+      - POSTGRES_DB=${DB_NAME:-kuruyemis_b2b}
+      - POSTGRES_USER=${DB_USER:-b2b_user}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-b2b_pass}
     ports:
       - "5432:5432"
 
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    # YENİ: Başlangıçta statik dosyaları topla, migrate yap ve sunucuyu başlat
+    command: >
+      sh -c "python manage.py collectstatic --noinput &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
+      - media_data:/app/media   # YENİ: Medya dosyaları için kalıcı disk
     ports:
       - "8000:8000"
     depends_on:
@@ -24,3 +29,4 @@ services:
 
 volumes:
   postgres_data:
+  media_data:   # YENİ: Docker'a bu volume'u oluşturmasını söylüyoruz
