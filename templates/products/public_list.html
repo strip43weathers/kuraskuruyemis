@@ -5,7 +5,7 @@
 <style>
     .hero-section {
         /* Arka plan görselini burada tanımlıyoruz. Üzerine okunabilirliği artırmak için hafif siyah bir filtre (gradient) ekledim. */
-        background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{% static "img/hero.png" %}');
+        background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('{% static "img/hero.png" %}');
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -21,10 +21,11 @@
     }
 
     .hero-section h1 {
+        color: #ffffff !important; /* Rengi kesin olarak alttaki metinle aynı (beyaz) yapar */
         font-size: 3rem;
         font-weight: 700;
         margin-bottom: 15px;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.6); /* Yazıya gölge vererek belirginleştirir */
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.6); /* Gölgeyi alttaki yazıyla birebir aynı yaptık ki koyu durmasın */
     }
 
     .hero-section p {
@@ -78,7 +79,7 @@
 <!-- Hero Alanı -->
 <div class="hero-section mt-3">
     <h1>Kuraş Kuruyemiş'e Hoş Geldiniz</h1>
-    <p>En taze ve doğal ürünler tek tıkla kapınızda!</p>
+    <p>En taze ve doğal ürünler burada!</p>
 </div>
 
 <div class="filter-bar p-3 mb-5 mt-2">
