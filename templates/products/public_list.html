@@ -1,7 +1,37 @@
 {% extends "public_base.html" %}
+{% load static %}
 
 {% block content %}
 <style>
+    .hero-section {
+        /* Arka plan görselini burada tanımlıyoruz. Üzerine okunabilirliği artırmak için hafif siyah bir filtre (gradient) ekledim. */
+        background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{% static "img/hero.png" %}');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 400px; /* Yüksekliği dilediğin gibi artırıp azaltabilirsin */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: #ffffff; /* Yazı rengi beyaz */
+        margin-bottom: 40px; /* Altındaki ürün listesiyle arasındaki boşluk */
+        border-radius: 8px; /* İsteğe bağlı: Köşeleri hafif yuvarlatır */
+    }
+
+    .hero-section h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.6); /* Yazıya gölge vererek belirginleştirir */
+    }
+
+    .hero-section p {
+        font-size: 1.25rem;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+    }
+
     .product-card {
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         border-radius: 12px;
@@ -44,6 +74,12 @@
         box-shadow: 0 4px 20px rgba(0,0,0,0.03);
     }
 </style>
+
+<!-- Hero Alanı -->
+<div class="hero-section mt-3">
+    <h1>Kuraş Kuruyemiş'e Hoş Geldiniz</h1>
+    <p>En taze ve doğal ürünler tek tıkla kapınızda!</p>
+</div>
 
 <div class="filter-bar p-3 mb-5 mt-2">
     <form method="GET" action="{% url 'home' %}" class="row g-3 align-items-center">
