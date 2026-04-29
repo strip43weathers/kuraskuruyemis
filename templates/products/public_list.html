@@ -41,10 +41,10 @@
         transform: translateY(-8px);
         box-shadow: 0 15px 35px rgba(0,0,0,0.08) !important;
     }
-    
+
     /* YENİ EKLENEN MOBİL UYUMLU KISIM */
     .product-img-wrapper {
-        height: 150px; 
+        height: 150px;
         overflow: hidden;
         position: relative;
     }
@@ -57,7 +57,7 @@
     .product-card-title {
         font-size: 0.95rem; /* Mobilde başlık biraz daha küçük */
     }
-    
+
     /* Masaüstü ekranlarda orijinal boyutlara dön (768px ve üzeri) */
     @media (min-width: 768px) {
         .product-img-wrapper {
@@ -67,7 +67,7 @@
             font-size: 1.25rem;
         }
     }
-    
+
     .filter-bar {
         background: #fff;
         border-radius: 12px;
@@ -86,7 +86,7 @@
         {% if current_query %}
             <input type="hidden" name="q" value="{{ current_query }}">
         {% endif %}
-        
+
         <div class="col-md-4">
             <select name="category" class="form-select border-0 bg-light rounded-3 py-2 text-muted">
                 <option value="">Tüm Kategoriler</option>
@@ -95,7 +95,7 @@
                 {% endfor %}
             </select>
         </div>
-        
+
         <div class="col-md-4">
             <select name="sort" class="form-select border-0 bg-light rounded-3 py-2 text-muted">
                 <option value="newest" {% if current_sort == 'newest' %}selected{% endif %}>En Yeniler</option>
@@ -117,7 +117,7 @@
     {% for product in products %}
     <div class="col">
         <div class="card h-100 border-0 shadow-sm product-card bg-white">
-            
+
             <div class="product-img-wrapper" style="background: #f8f9fa;">
                 {% if product.image %}
                     <img src="{{ product.image.url }}" class="w-100 h-100" alt="{{ product.name }}" style="object-fit: cover;">
@@ -127,16 +127,16 @@
                     </div>
                 {% endif %}
             </div>
-            
+
             <div class="card-body text-center p-2 p-md-4 d-flex flex-column">
                 <span class="badge bg-light text-secondary border mb-1 mb-md-2 align-self-center rounded-pill px-2 px-md-3" style="font-size: 0.7rem;">{{ product.category.name }}</span>
-                
+
                 <h5 class="card-title brand-font fw-bold text-dark mb-2 mb-md-3 product-card-title">{{ product.name }}</h5>
-                
+
                 <p class="card-text small text-muted mb-3 flex-grow-1 d-none d-md-block" style="line-height: 1.6;">
                     {{ product.description|truncatechars:80 }}
                 </p>
-                
+
                 <div class="mt-auto">
                     <a href="{% url 'products:public_detail' product.id %}" class="btn btn-outline-brand w-100 py-1 py-md-2" style="font-size: 0.85rem;">Ürünü İncele</a>
                 </div>
@@ -162,13 +162,13 @@
                 <a class="page-link rounded-circle border-0 text-dark bg-light shadow-sm" href="?page={{ products.previous_page_number }}&q={{ current_query }}&category={{ current_category }}&sort={{ current_sort }}"><i class="bi bi-chevron-left"></i></a>
             </li>
         {% endif %}
-        
+
         {% for i in products.paginator.page_range %}
             <li class="page-item">
                 <a class="page-link rounded-circle border-0 shadow-sm {% if products.number == i %}bg-dark text-white{% else %}text-dark bg-light{% endif %}" href="?page={{ i }}&q={{ current_query }}&category={{ current_category }}&sort={{ current_sort }}" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-weight: 600;">{{ i }}</a>
             </li>
         {% endfor %}
-        
+
         {% if products.has_next %}
             <li class="page-item">
                 <a class="page-link rounded-circle border-0 text-dark bg-light shadow-sm" href="?page={{ products.next_page_number }}&q={{ current_query }}&category={{ current_category }}&sort={{ current_sort }}"><i class="bi bi-chevron-right"></i></a>
