@@ -13,52 +13,71 @@
 {% endif %}
 
 <div class="row mt-5 mb-5 g-5">
+    <!-- Sol Sütun: İletişim Bilgileri -->
     <div class="col-lg-5">
         <h2 class="brand-font fw-bold mb-4">Bize Ulaşın</h2>
-        <p class="text-muted mb-5">Soru, görüş ve toptan alım talepleriniz için aşağıdaki iletişim kanallarından bize ulaşabilir veya iletişim formunu doldurabilirsiniz.</p>
+        <p class="text-muted mb-5">Toptan alışveriş, soru ve görüşleriniz için merkez şubemizi ziyaret edebilir, telefon numaramızdan bize ulaşabilir veya yandaki formu doldurabilirsiniz.</p>
 
+        <!-- Merkez Şube & Toptan Satış Adresi -->
         <div class="d-flex align-items-center mb-4 premium-card p-3">
-            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px; flex-shrink: 0;">
                 <i class="bi bi-geo-alt-fill fs-5" style="color: var(--brand-accent);"></i>
             </div>
             <div>
-                <h6 class="fw-bold mb-1">Merkez Ofis & Fabrika</h6>
-                <span class="text-muted small">Organize Sanayi Bölgesi 1. Cad. No:15 Merkez/Türkiye</span>
+                <h6 class="fw-bold mb-1">Merkez Şube & Toptan Satış</h6>
+                <span class="text-muted small">Uğur Mumcu Mah. Orhangazi Cad. No:117 Sultangazi / İstanbul</span>
             </div>
         </div>
 
+        <!-- Telefon Bilgisi -->
         <div class="d-flex align-items-center mb-4 premium-card p-3">
-            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px; flex-shrink: 0;">
                 <i class="bi bi-telephone-fill fs-5" style="color: var(--brand-accent);"></i>
             </div>
             <div>
-                <h6 class="fw-bold mb-1">Müşteri Hizmetleri</h6>
-                <span class="text-muted small">0850 XXX XX XX</span>
+                <h6 class="fw-bold mb-1">Telefon</h6>
+                <a href="tel:02126198718" class="text-muted small text-decoration-none">0212 619 87 18</a>
+            </div>
+        </div>
+        
+        <!-- Şubelerimiz -->
+        <div class="d-flex align-items-center mb-4 premium-card p-3">
+            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px; flex-shrink: 0;">
+                <i class="bi bi-shop fs-5" style="color: var(--brand-accent);"></i>
+            </div>
+            <div>
+                <h6 class="fw-bold mb-1">Şubelerimiz (Toplam 11 Nokta)</h6>
+                <span class="text-muted small">Sultangazi (2), Bağcılar (3), Esenler (1), Beylikdüzü (2), Sultanbeyli (1), Ataşehir (1), Kocaeli Gebze (1)</span>
             </div>
         </div>
 
+        <!-- E-Posta Bilgisi -->
         <div class="d-flex align-items-center mb-4 premium-card p-3">
-            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px; flex-shrink: 0;">
                 <i class="bi bi-envelope-fill fs-5" style="color: var(--brand-accent);"></i>
             </div>
             <div>
                 <h6 class="fw-bold mb-1">E-Posta</h6>
-                <span class="text-muted small">info@kuraskuruyemis.com</span>
+                <a href="mailto:info@kuraskuruyemis.com" class="text-muted small text-decoration-none">info@kuraskuruyemis.com</a>
             </div>
         </div>
+
+        <!-- WhatsApp Destek -->
         <div class="d-flex align-items-center mb-4 premium-card p-3">
-            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px; flex-shrink: 0;">
                 <i class="bi bi-whatsapp fs-5" style="color: #25D366;"></i>
             </div>
             <div>
                 <h6 class="fw-bold mb-1">WhatsApp Destek</h6>
-                <a href="https://wa.me/905551234567" target="_blank" class="text-muted small text-decoration-none">Sohbeti Başlatmak İçin Tıklayın</a>
+                <!-- Telefon numarasını kendi numaranızla güncelleyebilirsiniz -->
+                <a href="https://wa.me/905325101418" target="_blank" class="text-muted small text-decoration-none">Sohbeti Başlatmak İçin Tıklayın</a>
             </div>
         </div>
     </div>
 
+    <!-- Sağ Sütun: İletişim Formu -->
     <div class="col-lg-7">
-        <div class="premium-card p-4 p-md-5">
+        <div class="premium-card p-4 p-md-5 h-100">
             <h4 class="brand-font fw-bold mb-4">Mesaj Gönderin</h4>
             <form method="POST" action="{% url 'contact' %}">
                 {% csrf_token %}
@@ -84,7 +103,7 @@
                     <textarea name="message" class="form-control bg-light border-0" id="messageInput" placeholder="Mesajınız" style="height: 150px" required></textarea>
                     <label for="messageInput">Mesajınız</label>
                 </div>
-                <button type="submit" class="btn btn-brand w-100 py-3 fs-6">Mesajı Gönder</button>
+                <button type="submit" class="btn btn-brand w-100 py-3 fs-6 mt-2">Mesajı Gönder</button>
             </form>
         </div>
     </div>

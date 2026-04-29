@@ -1,45 +1,87 @@
 {% extends "public_base.html" %}
 {% block content %}
 <div class="premium-card overflow-hidden mb-5 mt-4">
+    <!-- Hero Bölümü -->
     <div class="position-relative py-5 text-center" style="background: linear-gradient(135deg, var(--brand-primary), #2c1a0f); color: white;">
         <div class="position-relative z-1 py-4">
-            <h1 class="brand-font display-5 fw-bold mb-3">Köklü Geçmiş, Doğal Lezzet</h1>
-            <p class="lead fw-light opacity-75 mx-auto" style="max-width: 600px;">Tarladan sofralarınıza uzanan tazelik yolculuğu.</p>
+            <h1 class="brand-font display-5 fw-bold mb-3">Kuraş Kuruyemiş</h1>
+            <p class="lead fw-light opacity-75 mx-auto" style="max-width: 600px;">12 Şubat 1986'dan beri toptan ve perakende satışla tarladan sofralarınıza uzanan tazelik yolculuğu.</p>
         </div>
         <i class="bi bi-tree position-absolute opacity-10" style="font-size: 15rem; right: 5%; top: -20%;"></i>
     </div>
 
+    <!-- Ana İçerik Bölümü -->
     <div class="p-4 p-md-5 text-secondary" style="line-height: 1.9; font-size: 1.05rem;">
+        
+        <!-- Hakkımızda ve Ürünler -->
         <div class="row justify-content-center mb-5">
             <div class="col-md-10 text-center">
-                <p class="mb-4">1990'lı yıllardan beri kuruyemiş sektöründe kalite ve tazeliği misyon edinen firmamız, tarladan sofranıza uzanan lezzet yolculuğunda en güvenilir köprü olmayı hedeflemektedir.</p>
-                <p>Özenle seçilmiş yöresel mahsulleri, en modern kavurma teknikleriyle işliyor; tazeliğini ve besin değerini koruyarak B2B bayilerimize ve perakende müşterilerimize ulaştırıyoruz. Kuruyemişin en doğal halini, hiç bir kaliteden ödün vermeden sunmak en büyük gururumuzdur.</p>
+                <p class="mb-4">12 Şubat 1986 yılından beri toptan ve perakende satışla hizmet vermeye devam eden <strong>Kuraş Kuruyemiş</strong>, yılların getirdiği tecrübe ile kaliteden ödün vermeden sofralarınıza ulaşıyor.</p>
+                <p class="fs-5 text-dark fw-medium">
+                    Kuruyemiş, Aktar, Baharat, Bakliyat, Lokum, Kahve, Şekerleme, Çikolata, Kuru Meyve, Hurma ve daha fazlası Kuraş Kuruyemiş şubelerinde sizleri bekliyor.
+                </p>
             </div>
         </div>
         
+        <!-- Şubeler ve İletişim Kartları -->
+        <div class="row mb-5 g-4 justify-content-center">
+            <!-- Merkez Şube / Toptan Satış -->
+            <div class="col-md-6">
+                <div class="p-4 border rounded-4 h-100 bg-light text-center shadow-sm">
+                    <i class="bi bi-building display-6 mb-3 d-block" style="color: var(--brand-accent);"></i>
+                    <h5 class="brand-font fw-bold text-dark">Merkez Şube & Toptan Satış</h5>
+                    <p class="small mb-3">Toptan alışveriş müşterisi iseniz merkez şubemizi ziyaret edebilir ya da bizimle telefonla iletişime geçebilirsiniz.</p>
+                    <hr class="w-50 mx-auto mb-3">
+                    <p class="mb-1 text-dark"><strong>Adres:</strong> Uğur Mumcu Mah. Orhangazi Cad. No:117 Sultangazi / İstanbul</p>
+                    <p class="mb-0 text-dark"><strong>Telefon:</strong> <a href="tel:02126198718" class="text-decoration-none" style="color: var(--brand-accent);">0212 619 87 18</a></p>
+                </div>
+            </div>
+            
+            <!-- Şube Ağımız -->
+            <div class="col-md-6">
+                <div class="p-4 border rounded-4 h-100 bg-light text-center shadow-sm">
+                    <i class="bi bi-geo-alt display-6 mb-3 d-block" style="color: var(--brand-accent);"></i>
+                    <h5 class="brand-font fw-bold text-dark">Geniş Şube Ağımız</h5>
+                    <p class="small mb-3">İstanbul'da 10, Kocaeli Gebze'de 1 olmak üzere toplam 11 şubemizle sizlere en yakın noktadayız.</p>
+                    <hr class="w-50 mx-auto mb-3">
+                    <div class="d-flex flex-wrap justify-content-center gap-2 small text-dark fw-medium">
+                        <span class="badge bg-white text-dark border">Sultangazi (2)</span>
+                        <span class="badge bg-white text-dark border">Bağcılar (3)</span>
+                        <span class="badge bg-white text-dark border">Esenler (1)</span>
+                        <span class="badge bg-white text-dark border">Beylikdüzü (2)</span>
+                        <span class="badge bg-white text-dark border">Sultanbeyli (1)</span>
+                        <span class="badge bg-white text-dark border">Ataşehir (1)</span>
+                        <span class="badge bg-white text-dark border">Kocaeli Gebze (1)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Özellikler (Mevcut Tasarımdan Korunan Kısım) -->
         <div class="row mt-5 text-center g-4">
             <div class="col-md-4">
                 <div class="p-4 h-100 rounded-4 bg-light">
                     <i class="bi bi-shield-check display-5 mb-3 d-block" style="color: var(--brand-accent);"></i>
                     <h5 class="brand-font fw-bold text-dark">Kalite Garantisi</h5>
-                    <p class="small mb-0">Tüm ürünlerimiz sıkı kalite kontrol süreçlerinden geçer ve el değmeden paketlenir.</p>
+                    <p class="small mb-0">Tüm ürünlerimiz sıkı kalite kontrol süreçlerinden geçer ve özenle paketlenir.</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="p-4 h-100 rounded-4 bg-light">
                     <i class="bi bi-truck display-5 mb-3 d-block" style="color: var(--brand-accent);"></i>
-                    <h5 class="brand-font fw-bold text-dark">Hızlı Teslimat</h5>
-                    <p class="small mb-0">Toptan siparişleriniz tazeliğini yitirmeden Türkiye'nin her yerine güvenle ulaştırılır.</p>
+                    <h5 class="brand-font fw-bold text-dark">Güvenilir Teslimat</h5>
+                    <p class="small mb-0">Toptan siparişleriniz tazeliğini yitirmeden güvenle ulaştırılır.</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="p-4 h-100 rounded-4 bg-light">
                     <i class="bi bi-flower1 display-5 mb-3 d-block" style="color: var(--brand-accent);"></i>
-                    <h5 class="brand-font fw-bold text-dark">Doğal ve Katkısız</h5>
-                    <p class="small mb-0">Ürünlerimizde hiçbir yapay koruyucu ve tatlandırıcı madde bulunmaz.</p>
+                    <h5 class="brand-font fw-bold text-dark">Geniş Ürün Yelpazesi</h5>
+                    <p class="small mb-0">Kuruyemişten baharata, lokumdan çikolataya aradığınız her şey burada.</p>
                 </div>
             </div>
         </div>
+        
     </div>
 </div>
 {% endblock %}
