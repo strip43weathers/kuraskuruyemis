@@ -1,0 +1,16 @@
+{% extends 'public_base.html' %}
+
+{% block content %}
+  <h1>{{ branch.name }}</h1>
+  {% if branch.image %}
+    <img src="{{ branch.image.url }}" alt="{{ branch.name }}" style="max-width: 100%;">
+  {% endif %}
+  
+  <div class="branch-info">
+    <p><strong>Adres:</strong> {{ branch.address }}</p>
+    <p><strong>Telefon:</strong> {{ branch.phone }}</p>
+    <p><strong>Açıklama:</strong> {{ branch.description }}</p>
+  </div>
+  
+  <a href="{% url 'branches:list' %}">Şubelere Geri Dön</a>
+{% endblock %}

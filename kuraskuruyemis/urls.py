@@ -21,6 +21,7 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(next_page='/login/'), name='logout'),
     path('urunler/', include('products.urls', namespace='products')),
     path('siparis/', include('orders.urls', namespace='orders')),
+    path('subeler/', include('branches.urls')),
 ]
 
 if settings.DEBUG:
