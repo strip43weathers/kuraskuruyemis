@@ -8,7 +8,8 @@ WORKDIR /app
 
 # Gereksinimleri kopyala ve yükle
 COPY requirements.txt /app/
-RUN pip install --upgrade pip && pip install -r requirements.txt
+# YENİ: --no-cache-dir eklendi
+RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
 # Tüm proje dosyalarını kopyala
 COPY . /app/
