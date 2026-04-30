@@ -33,6 +33,12 @@ services:
         condition: service_healthy # YENİ: Sadece db "sağlıklı" olduğunda web'i başlat
     restart: always
 
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file:
+
   nginx:
     image: nginx:1.25
     volumes:

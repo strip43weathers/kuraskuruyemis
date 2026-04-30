@@ -14,21 +14,32 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-fallback-key')
 # Mevcut satırın (Buna dokunmuyoruz)
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
+
 # --- YENİ EKLENECEK GÜVENLİK BLOĞU ---
 if not DEBUG:
-    # 1. Tüm HTTP trafiğini otomatik olarak HTTPS'e yönlendirir
-    SECURE_SSL_REDIRECT = True
+    # --- DİKKAT: İLK KURULUM (SSL ALINANA KADAR) ---
+    # Certbot ile SSL alırken yönlendirme döngüsüne (redirect loop) girmemek için
+    # aşağıdaki 3 ayarı ŞİMDİLİK False yapıyoruz.
+    # SSL SERTİFİKASINI ALDIKTAN SONRA BUNLARI KESİNLİKLE TRUE YAP!
+    SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
 
-    # 2. Oturum ve form güvenlik çerezlerinin sadece HTTPS üzerinden iletilmesini sağlar
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-
-    # 3. Tarayıcının XSS (Cross-Site Scripting) ve içerik türü manipülasyonu korumalarını açar
+    # --- ŞU AN AKTİF OLABİLECEK GÜVENLİK AYARLARI ---
+    # Tarayıcının XSS (Cross-Site Scripting) ve içerik türü manipülasyonu korumalarını açar
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
 
-    # 4. Gunicorn/Nginx arkasında çalışırken Django'nun HTTPS trafiğini doğru algılamasını sağlar
+    # Gunicorn/Nginx arkasında çalışırken Django'nun HTTPS trafiğini doğru algılamasını sağlar
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# YENİ: Nginx ve Gunicorn arasındaki trafiğin güvenilir kabul edilmesi için (Form hatalarını önler)
+CSRF_TRUSTED_ORIGINS = [
+    'https://kuraskuruyemis.com',
+    'https://www.kuraskuruyemis.com',
+    'http://kuraskuruyemis.com',      # SSL alana kadar formların HTTP'de de çalışması için
+    'http://www.kuraskuruyemis.com',  # SSL alana kadar formların HTTP'de de çalışması için
+]
 
 
 # Virgülle ayrılmış hostları listeye çeviriyoruz
