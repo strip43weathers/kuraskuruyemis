@@ -88,3 +88,20 @@ class ContactMessage(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.email}"
+
+
+# products/models.py dosyasının en altına ekle
+
+class FAQ(models.Model):
+    question = models.CharField(max_length=255, verbose_name="Soru")
+    answer = models.TextField(verbose_name="Cevap")
+    order = models.PositiveIntegerField(default=0, verbose_name="Sıra", help_text="Küçük sayı önce gösterilir.")
+    is_active = models.BooleanField(default=True, verbose_name="Yayında mı?")
+
+    class Meta:
+        ordering = ['order', '-id']
+        verbose_name = "Sıkça Sorulan Soru"
+        verbose_name_plural = "Sıkça Sorulan Sorular"
+
+    def __str__(self):
+        return self.question

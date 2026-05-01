@@ -1,0 +1,60 @@
+{% extends "public_base.html" %}
+
+{% block content %}
+<div class="container my-5 py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 text-center">
+            
+            <!-- Başlık Alanı -->
+            <h1 class="brand-font mb-3" style="font-size: 3rem;">Kuraş Kuruyemiş Ailesine Katılın!</h1>
+            <p class="lead mb-5" style="color: #666;">
+                Yüksek kâr marjı, taze ürün garantisi ve güçlü marka bilinirliği ile kendi bölgenizde kazanmaya hemen başlayın. Toptan kuruyemiş ağımızın bir parçası olun.
+            </p>
+
+            <!-- WhatsApp İletişim Kartı -->
+            <div class="premium-card p-5 mb-5" style="background-color: #fff; border-top: 5px solid var(--brand-accent);">
+                <div class="card-body">
+                    <h3 class="brand-font mb-3">Hemen Başvurun</h3>
+                    <p class="mb-4" style="color: var(--text-main);">Bayilik şartları, toptan fiyat listesi ve bölge desteklerimiz hakkında detaylı bilgi almak için müşteri temsilcimizle WhatsApp üzerinden anında görüşebilirsiniz.</p>
+                    
+                    <!-- WhatsApp Butonu -->
+                    <a href="https://wa.me/905325101418?text=Merhaba,%20Kuraş%20Kuruyemiş%20bayilik%20şartları%20hakkında%20bilgi%20almak%20istiyorum." 
+                       class="btn px-5 py-3 rounded-pill fw-bold shadow-sm" 
+                       style="background-color: #25d366; color: white; font-size: 1.1rem; transition: transform 0.3s;"
+                       onmouseover="this.style.transform='translateY(-3px)'" 
+                       onmouseout="this.style.transform='translateY(0)'"
+                       target="_blank" rel="noopener noreferrer">
+                        <i class="bi bi-whatsapp fs-4 me-2" style="vertical-align: middle;"></i> WhatsApp ile İletişime Geç
+                    </a>
+                </div>
+            </div>
+
+            <!-- Avantajlar (İkonlar Bootstrap Icon ile güncellendi) -->
+            <div class="row mt-5 text-start">
+                <div class="col-md-4 mb-4">
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-truck fs-3 me-3" style="color: var(--brand-accent);"></i>
+                        <h5 class="brand-font mb-0">Hızlı Sevkiyat</h5>
+                    </div>
+                    <p class="small" style="color: #666;">Siparişleriniz taze taze kavrulup en hızlı şekilde kapınıza teslim edilir.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-tags fs-3 me-3" style="color: var(--brand-accent);"></i>
+                        <h5 class="brand-font mb-0">Rekabetçi Fiyat</h5>
+                    </div>
+                    <p class="small" style="color: #666;">Üreticiden doğrudan tedarik avantajıyla yüksek kâr marjı elde edin.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-shield-check fs-3 me-3" style="color: var(--brand-accent);"></i>
+                        <h5 class="brand-font mb-0">Bölge Koruması</h5>
+                    </div>
+                    <p class="small" style="color: #666;">Bulunduğunuz bölgede satış haklarınızı koruyarak rekabet avantajı sağlarız.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

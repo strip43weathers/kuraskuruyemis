@@ -55,6 +55,8 @@ INSTALLED_APPS = [
     'orders',
     'products',
     'branches',
+    'ckeditor',
+    'blog',
 ]
 
 MIDDLEWARE = [
@@ -174,4 +176,21 @@ LOGGING = {
             'propagate': True,
         },
     },
+}
+
+
+# CKEditor Ayarları
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Custom',
+        'toolbar_Custom': [
+            ['Bold', 'Italic', 'Underline'],
+            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+            ['Link', 'Unlink'],
+            ['RemoveFormat', 'Source'],
+            ['Format', 'Font', 'FontSize', 'TextColor', 'BGColor'],
+            ['Image', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar'],
+        ],
+        'width': '100%',
+    }
 }

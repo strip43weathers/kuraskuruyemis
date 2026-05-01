@@ -1,0 +1,71 @@
+{% extends "public_base.html" %}
+
+{% block content %}
+<div class="container my-5 py-4">
+    <!-- Sayfa Başlığı -->
+    <div class="row justify-content-center text-center mb-5">
+        <div class="col-lg-8">
+            <h1 class="brand-font mb-3" style="font-size: 3rem;">Üretim Tesisimiz</h1>
+            <p class="lead" style="color: #666;">
+                En taze kuruyemişleri sofralarınıza ulaştırmak için son teknolojiyle donatılmış, hijyenik üretim tesisimizin kapılarını sizlere açıyoruz.
+            </p>
+        </div>
+    </div>
+
+    <!-- Video Alanı -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-10">
+            <div class="premium-card p-3" style="background-color: #fff;">
+                <!-- Bootstrap'in responsive video class'ı: 16:9 oranını otomatik korur -->
+                <div class="ratio ratio-16x9 rounded overflow-hidden shadow-sm">
+                    
+                    <!-- VİDEO BURAYA GELECEK: YouTube'dan videoya sağ tıklayıp "Yerleştirme kodunu kopyala (Embed)" diyerek src kısmını buraya yapıştırabilirsin -->
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fabrika Özellikleri / İkonlu Kartlar -->
+    <div class="row mt-5 g-4">
+        <!-- Özellik 1 -->
+        <div class="col-md-4">
+            <div class="premium-card h-100 p-4 text-center">
+                <div class="mb-3">
+                    <i class="bi bi-shield-check" style="font-size: 3rem; color: var(--brand-accent);"></i>
+                </div>
+                <h4 class="brand-font mb-3">Üst Düzey Hijyen</h4>
+                <p class="small text-muted mb-0">
+                    Üretim hattımız uluslararası gıda güvenliği standartlarına uygun olarak tasarlanmış olup, el değmeden paketleme yapılmaktadır.
+                </p>
+            </div>
+        </div>
+
+        <!-- Özellik 2 -->
+        <div class="col-md-4">
+            <div class="premium-card h-100 p-4 text-center">
+                <div class="mb-3">
+                    <i class="bi bi-gear-wide-connected" style="font-size: 3rem; color: var(--brand-accent);"></i>
+                </div>
+                <h4 class="brand-font mb-3">Modern Teknoloji</h4>
+                <p class="small text-muted mb-0">
+                    Özel kavurma fırınlarımız sayesinde her bir ürünün doğal aroması, besin değeri ve çıtırlığı maksimum seviyede korunur.
+                </p>
+            </div>
+        </div>
+
+        <!-- Özellik 3 -->
+        <div class="col-md-4">
+            <div class="premium-card h-100 p-4 text-center">
+                <div class="mb-3">
+                    <i class="bi bi-box-seam" style="font-size: 3rem; color: var(--brand-accent);"></i>
+                </div>
+                <h4 class="brand-font mb-3">Taze Paketleme</h4>
+                <p class="small text-muted mb-0">
+                    Kavurma işleminden hemen sonra uygulanan vakumlu ve koruyucu atmosferli paketleme ile ürünler aylarca ilk günkü tazeliğini korur.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

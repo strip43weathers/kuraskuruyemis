@@ -11,3 +11,5 @@ db.sqlite3
 
 # Statik dosyaların toplandığı klasör
 staticfiles/
+
+certbot/

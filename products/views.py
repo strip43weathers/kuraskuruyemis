@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.core.mail import send_mail
 from django.conf import settings
+from .models import FAQ
 
 
 @login_required(login_url='/login/')
@@ -129,9 +130,8 @@ def about_us(request):
 
 
 def faq(request):
-    """Sıkça Sorulan Sorular Sayfası"""
-    categories = Category.objects.filter(is_active=True)
-    return render(request, 'pages/faq.html', {'categories': categories})
+    faqs = FAQ.objects.filter(is_active=True)
+    return render(request, 'pages/faq.html', {'faqs': faqs})
 
 
 def contact(request):
@@ -157,3 +157,7 @@ def contact(request):
         return redirect('contact')
 
     return render(request, 'pages/contact.html', {'categories': categories})
+
+
+
+

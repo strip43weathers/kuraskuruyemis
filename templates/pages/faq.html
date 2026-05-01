@@ -39,21 +39,32 @@
 
         <div class="accordion custom-accordion" id="faqAccordion">
             
+            {% for item in faqs %}
             <div class="accordion-item">
-                <h2 class="accordion-header">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                        Toptan alım (Bayilik) şartlarınız nelerdir?
+                <h2 class="accordion-header" id="heading{{ item.id }}">
+                    <!-- İlk soru haricindekilerin kapalı gelmesi için collapsed class'ını dinamik ekliyoruz -->
+                    <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" 
+                            type="button" 
+                            data-bs-toggle="collapse" 
+                            data-bs-target="#faq{{ item.id }}" 
+                            aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" 
+                            aria-controls="faq{{ item.id }}">
+                        {{ item.question }}
                     </button>
                 </h2>
-                <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                <!-- Aynı şekilde sadece ilk sorunun show (açık) class'ı almasını sağlıyoruz -->
+                <div id="faq{{ item.id }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" aria-labelledby="heading{{ item.id }}" data-bs-parent="#faqAccordion">
                     <div class="accordion-body text-muted">
-                        Bayimiz olmak ve toptan fiyatlardan yararlanmak için müşteri temsilcilerimize başvurmanız gerekmektedir. Başvurunuz onaylandığında size özel bir <strong>B2B portal şifresi</strong> tanımlanır ve sisteme giriş yaparak sipariş oluşturabilirsiniz.
+                        {{ item.answer|linebreaksbr }}
                     </div>
                 </div>
             </div>
+            {% empty %}
+            <div class="text-center py-5">
+                <h5 class="text-muted brand-font">Henüz soru eklenmedi.</h5>
+            </div>
+            {% endfor %}
 
-            
-            
         </div>
     </div>
 </div>

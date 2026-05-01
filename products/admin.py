@@ -31,3 +31,13 @@ class ContactMessageAdmin(admin.ModelAdmin):
     list_filter = ['is_read', 'created_at']
     search_fields = ['name', 'email', 'message']
     list_editable = ['is_read']
+
+
+# products/admin.py
+from .models import FAQ # FAQ modelini projene import etmeyi unutma
+
+@admin.register(FAQ)
+class FAQAdmin(admin.ModelAdmin):
+    list_display = ('question', 'order', 'is_active')
+    list_editable = ('order', 'is_active') # Admin listesinden direkt sırasını değiştirebilirsin
+    search_fields = ('question', 'answer')

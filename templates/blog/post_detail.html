@@ -1,0 +1,59 @@
+{% extends "public_base.html" %}
+
+{% block title %}{{ post.title }} | Kuraş Kuruyemiş{% endblock %}
+
+{% block content %}
+<div class="container my-5 py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            
+            <!-- Geri Dön Butonu -->
+            <a href="{% url 'blog:post_list' %}" class="text-decoration-none mb-4 d-inline-block" style="color: var(--brand-accent);">
+                <i class="bi bi-arrow-left me-1"></i> Blog'a Dön
+            </a>
+
+            <!-- Blog Görseli -->
+            {% if post.image %}
+                <img src="{{ post.image.url }}" class="img-fluid rounded-4 shadow-sm mb-4 w-100" alt="{{ post.title }}" style="max-height: 400px; object-fit: cover;">
+            {% endif %}
+
+            <!-- Başlık ve Tarih -->
+            <h1 class="brand-font mb-3" style="font-size: 2.5rem;">{{ post.title }}</h1>
+            <p class="text-muted mb-4">
+                <i class="bi bi-calendar3 me-2"></i>{{ post.created_on|date:"d F Y" }}
+            </p>
+
+            <hr class="mb-5" style="opacity: 0.1;">
+
+            <!-- İçerik Alanı (CKEditor ile gelen HTML kodlarını güvenle render etmek için 'safe' filtresi kullandık) -->
+            <div class="blog-content" style="font-size: 1.1rem; line-height: 1.8; color: var(--text-main);">
+                {{ post.content|safe }}
+            </div>
+
+            <!-- Sayfa Sonu Paylaşım vs. Alanı (Opsiyonel) -->
+            <div class="mt-5 pt-4 border-top">
+                <p class="fw-bold mb-2">Bu yazıyı paylaş:</p>
+                <a href="#" class="btn btn-outline-secondary btn-sm me-2"><i class="bi bi-twitter"></i> Twitter</a>
+                <a href="#" class="btn btn-outline-secondary btn-sm me-2"><i class="bi bi-facebook"></i> Facebook</a>
+                <a href="#" class="btn btn-outline-secondary btn-sm"><i class="bi bi-linkedin"></i> LinkedIn</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    /* CKEditor içinden gelen resimlerin veya tabloların mobil uyumlu olması ve taşmaması için ufak bir CSS dokunuşu */
+    .blog-content img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+    }
+    .blog-content table {
+        width: 100% !important;
+        max-width: 100%;
+        margin-bottom: 1rem;
+        background-color: transparent;
+    }
+</style>
+{% endblock %}
