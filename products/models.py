@@ -29,6 +29,20 @@ class Product(models.Model):
         decimal_places=2,
         verbose_name="Toptan KG Fiyatı (TL)"
     )
+    public_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        verbose_name="Vitrin/Perakende Fiyatı (TL)"
+    )
+
+    # YENİ EKLENEN: Vitrin Fiyatını Göster/Gizle Şalteri
+    show_public_price = models.BooleanField(
+        default=False,
+        verbose_name="4- Vitrinde Fiyatı Göster",
+        help_text="İşaretlenirse halka açık katalogda 'Vitrin/Perakende Fiyatı' görünür."
+    )
 
     # Stok ve Minimum Sipariş - KG cinsinden olacağı için DecimalField
     stock_quantity = models.DecimalField(

@@ -133,6 +133,12 @@
                 <span class="badge bg-light text-secondary border mb-1 mb-md-2 align-self-center rounded-pill px-2 px-md-3" style="font-size: 0.7rem;">{{ product.category.name }}</span>
 
                 <h5 class="card-title brand-font fw-bold text-dark mb-2 mb-md-3 product-card-title">{{ product.name }}</h5>
+                
+                {% if product.show_public_price and product.public_price %}
+                    <div class="text-success fw-bold mb-2 fs-5">
+                        {{ product.public_price }} ₺
+                    </div>
+                {% endif %}
 
                 <p class="card-text small text-muted mb-3 flex-grow-1 d-none d-md-block" style="line-height: 1.6;">
                     {{ product.description|truncatechars:80 }}

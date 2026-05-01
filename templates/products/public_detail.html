@@ -27,6 +27,11 @@
             
             <div class="d-flex align-items-center gap-3 mb-4 pb-4 border-bottom">
                 <span class="badge bg-light text-dark border px-3 py-2 rounded-pill"><i class="bi bi-upc-scan me-2"></i>SKU: {{ product.sku }}</span>
+                {% if product.show_public_price and product.public_price %}
+                    <span class="badge bg-success text-white px-3 py-2 rounded-pill" style="font-size: 1.1rem;">
+                        <i class="bi bi-tag-fill me-1"></i> {{ product.public_price }} ₺
+                    </span>
+                {% endif %}
             </div>
 
             <div class="product-description text-secondary mb-5" style="line-height: 1.9; font-size: 1.05rem;">

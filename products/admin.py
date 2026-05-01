@@ -13,7 +13,7 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     # Listede görünecek sütunlar
-    list_display = ['name', 'category', 'sku', 'wholesale_price', 'stock_quantity', 'is_active']
+    list_display = ['name', 'category', 'sku', 'wholesale_price', 'public_price', 'show_public_price', 'stock_quantity', 'is_active']
 
     # Sağ tarafta çıkacak filtreleme seçenekleri
     list_filter = ['is_active', 'category', 'created_at']
@@ -22,7 +22,7 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ['name', 'sku']
 
     # Ürün detayına girmeden listede hızlıca değiştirilebilecek alanlar
-    list_editable = ['wholesale_price', 'stock_quantity', 'is_active']
+    list_editable = ['wholesale_price', 'public_price', 'show_public_price', 'stock_quantity', 'is_active']
 
 
 @admin.register(ContactMessage)
