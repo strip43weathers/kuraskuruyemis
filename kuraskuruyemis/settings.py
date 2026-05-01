@@ -21,9 +21,9 @@ if not DEBUG:
     # Certbot ile SSL alırken yönlendirme döngüsüne (redirect loop) girmemek için
     # aşağıdaki 3 ayarı ŞİMDİLİK False yapıyoruz.
     # SSL SERTİFİKASINI ALDIKTAN SONRA BUNLARI KESİNLİKLE TRUE YAP!
-    SECURE_SSL_REDIRECT = False
-    SESSION_COOKIE_SECURE = False
-    CSRF_COOKIE_SECURE = False
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
 
     # --- ŞU AN AKTİF OLABİLECEK GÜVENLİK AYARLARI ---
     # Tarayıcının XSS (Cross-Site Scripting) ve içerik türü manipülasyonu korumalarını açar
