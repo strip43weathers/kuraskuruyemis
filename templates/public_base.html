@@ -179,75 +179,78 @@
     <div class="top-bar py-2 d-none d-md-block">
         <div class="container d-flex justify-content-between align-items-center">
             <div><i class="bi bi-telephone-fill me-2" style="color: var(--brand-accent);"></i> Müşteri Destek: <strong>0212 619 87 18</strong></div>
-            <div>
-                <a href="{% url 'about' %}">Hakkımızda</a>
-                <a href="{% url 'contact' %}">İletişim</a>
-            </div>
         </div>
     </div>
 
     <nav class="navbar navbar-expand-lg sticky-top py-3">
-        <div class="container">
-            <a class="navbar-brand d-flex flex-column" href="{% url 'home' %}">
-                <img src="{% static 'img/kuras.png' %}" alt="Kuraş Kuruyemiş Logo" height="100" class="me-2">
-            </a>
+    <div class="container">
+        <a class="navbar-brand d-flex flex-column" href="{% url 'home' %}">
+            <img src="{% static 'img/kuras.png' %}" alt="Kuraş Kuruyemiş Logo" height="100" class="me-2">
+        </a>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
-                <span class="bi bi-list fs-1" style="color: var(--brand-primary);"></span>
-            </button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+            <span class="bi bi-list fs-1" style="color: var(--brand-primary);"></span>
+        </button>
 
-            <div class="collapse navbar-collapse" id="mainNavbar">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'home' %}">Tüm Ürünler</a>
-                    </li>
-                    
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            Kategoriler
-                        </a>
-                        <ul class="dropdown-menu border-0 shadow-sm rounded-3">
-                            {% for cat in categories %}
-                                <li><a class="dropdown-item py-2" href="{% url 'home' %}?category={{ cat.id }}">{{ cat.name }}</a></li>
-                            {% endfor %}
-                        </ul>
-                    </li>
+        <div class="collapse navbar-collapse" id="mainNavbar">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}">Tüm Ürünler</a>
+                </li>
                 
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'branches:list' %}">Şubeler</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'blog:post_list' %}">Blog</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'about' %}">Hakkımızda</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'contact' %}">İletişim</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'fabrika_tanitim' %}">Fabrika Tanıtım</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'bayimiz_ol' %}">Bayi Ol</a>
-                    </li>
-                </ul>
-
-                <form action="{% url 'home' %}" method="GET" class="search-box d-flex px-3 py-1 me-lg-3" style="max-width: 300px;">
-                    <input type="text" name="q" class="form-control" placeholder="Ürünlerimizde ara..." value="{{ current_query|default:'' }}">
-                    {% if current_category %}<input type="hidden" name="category" value="{{ current_category }}">{% endif %}
-                    {% if current_sort %}<input type="hidden" name="sort" value="{{ current_sort }}">{% endif %}
-                    <button type="submit" class="btn btn-link p-0" style="color: var(--brand-accent);"><i class="bi bi-search"></i></button>
-                </form>
-
-                <div class="d-flex align-items-center mt-3 mt-lg-0">
-                    <a href="{% url 'login' %}" class="btn btn-outline-brand px-4 py-2 w-100">
-                        <i class="bi bi-person-fill me-1"></i> Bayi Girişi
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        Kategoriler
                     </a>
-                </div>
+                    <ul class="dropdown-menu border-0 shadow-sm rounded-3">
+                        {% for cat in categories %}
+                            <li><a class="dropdown-item py-2" href="{% url 'home' %}?category={{ cat.id }}">{{ cat.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'branches:list' %}">Şubeler</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'blog:post_list' %}">Blog</a>
+                </li>
+
+                <!-- YENİ: Kurumsal Dropdown Menüsü -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        Kurumsal
+                    </a>
+                    <ul class="dropdown-menu border-0 shadow-sm rounded-3">
+                        <li><a class="dropdown-item py-2" href="{% url 'about' %}"><i class="bi bi-info-circle me-2 text-muted"></i>Hakkımızda</a></li>
+                        <li><a class="dropdown-item py-2" href="{% url 'fabrika_tanitim' %}"><i class="bi bi-building me-2 text-muted"></i>Fabrika Tanıtım</a></li>
+                        <li><a class="dropdown-item py-2" href="{% url 'faq' %}"><i class="bi bi-question-circle me-2 text-muted"></i>S.S.S.</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item py-2" href="{% url 'contact' %}"><i class="bi bi-telephone me-2 text-muted"></i>İletişim</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <form action="{% url 'home' %}" method="GET" class="search-box d-flex px-3 py-1 me-lg-3" style="max-width: 300px;">
+                <input type="text" name="q" class="form-control" placeholder="Ürünlerimizde ara..." value="{{ current_query|default:'' }}">
+                {% if current_category %}<input type="hidden" name="category" value="{{ current_category }}">{% endif %}
+                {% if current_sort %}<input type="hidden" name="sort" value="{{ current_sort }}">{% endif %}
+                <button type="submit" class="btn btn-link p-0" style="color: var(--brand-accent);"><i class="bi bi-search"></i></button>
+            </form>
+
+            <!-- YENİ: Buton Alanı (Bayimiz Ol ve Bayi Girişi Yan Yana) -->
+            <div class="d-flex align-items-center mt-3 mt-lg-0 gap-2">
+                <a href="{% url 'bayimiz_ol' %}" class="btn btn-brand px-4 py-2 w-100 text-nowrap">
+                    <i class="bi bi-shop me-1"></i> Bayimiz Ol
+                </a>
+                <a href="{% url 'login' %}" class="btn btn-outline-brand px-4 py-2 w-100 text-nowrap">
+                    <i class="bi bi-person-fill me-1"></i> Bayi Girişi
+                </a>
             </div>
         </div>
-    </nav>
+    </div>
+</nav>
 
     <div class="bg-nuts-container d-none d-lg-block">
         <img src="{% static 'img/bg-nuts.png' %}" alt="Kuruyemiş" style="width: 200px; mix-blend-mode: multiply;">
