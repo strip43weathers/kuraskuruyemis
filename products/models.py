@@ -43,6 +43,13 @@ class Product(models.Model):
         verbose_name="4- Vitrinde Fiyatı Göster",
         help_text="İşaretlenirse halka açık katalogda 'Vitrin/Perakende Fiyatı' görünür."
     )
+    # models.py içindeki Product modeline şu alanı ekle:
+
+    allow_whatsapp_order = models.BooleanField(
+        default=True,
+        verbose_name="5- WhatsApp Sipariş Butonu",
+        help_text="Bu ürün için vitrinde 'WhatsApp ile Sipariş Ver' butonu görünsün mü?"
+    )
 
     # Stok ve Minimum Sipariş - KG cinsinden olacağı için DecimalField
     stock_quantity = models.DecimalField(

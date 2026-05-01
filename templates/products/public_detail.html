@@ -38,14 +38,21 @@
                 <h5 class="brand-font text-dark mb-3">Ürün Hakkında</h5>
                 {{ product.description|linebreaks }}
             </div>
-
-            <div class="bg-light p-4 rounded-4">
-                <div class="d-flex align-items-center">
-                    <div class="me-3">
-                        <i class="bi bi-info-circle fs-3" style="color: var(--brand-accent);"></i>
-                    </div>
-                </div>
+        
+            <!-- YENİ EKLENEN KISIM: WhatsApp Sipariş Butonu -->
+            {% if product.allow_whatsapp_order %}
+            <div class="mb-5">
+                <!-- DİKKAT: '905555555555' yazan yere kendi numaranı boşluksuz şekilde yazmalısın -->
+                <a href="https://wa.me/905325101418?text=Merhaba, *{{ product.name }}* siparişi vermek istiyorum.%0A%0A📦 *İstediğim Miktar:* %0A📍 *Teslimat Adresim:* " 
+                target="_blank" 
+                class="btn btn-success px-4 py-3 rounded-pill fw-bold shadow-sm d-inline-flex align-items-center" 
+                style="font-size: 1.1rem; background-color: #25D366; border-color: #25D366;">
+                    <i class="bi bi-whatsapp fs-4 me-2"></i> WhatsApp'tan Sipariş Ver
+                </a>
             </div>
+            {% endif %}
+            <!-- BİTİŞ -->
+        
         </div>
     </div>
 </div>
