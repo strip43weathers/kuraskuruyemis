@@ -3,28 +3,6 @@
 
 {% block content %}
 <style>
-    .hero-section {
-        /* Sadece saf görselin linki kaldı */
-        background-image: url('{% static "img/hero1.png" %}'); /* Uzantının doğru olduğundan emin ol (jpg/png) */
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        height: 600px; /* Az önce belirlediğimiz yükseklik */
-        margin-bottom: 40px;
-        border-radius: 8px;
-    }
-
-    /* Mobilde (telefonlarda) yüksekliği ayarlayan kısım aynen kalabilir */
-    @media (max-width: 768px) {
-        .hero-section {
-            height: 350px;
-        }
-    }
-
-    .hero-section p {
-        font-size: 1.25rem;
-        text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
-    }
 
     .product-card {
         transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -68,9 +46,10 @@
         box-shadow: 0 4px 20px rgba(0,0,0,0.03);
     }
 </style>
-
+    
 <!-- Hero Alanı -->
-<div class="hero-section mt-3">
+<div class="mt-3 mb-4">
+    <img src="{% static 'img/hero1.png' %}" class="img-fluid w-100 rounded-3 shadow-sm" alt="Kuraş Kuruyemiş Kataloğu">
 </div>
 
 <div class="filter-bar p-3 mb-5 mt-2">
