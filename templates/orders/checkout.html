@@ -40,8 +40,11 @@
                         </label>
                     </div>
 
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-success btn-lg fw-bold">
+                    <div class="d-flex flex-column flex-md-row gap-3 mt-4">
+                        <a href="{% url 'orders:cart_detail' %}" class="btn btn-outline-secondary btn-lg fw-bold px-4">
+                            &larr; Sepete Dön
+                        </a>
+                        <button type="submit" class="btn btn-success btn-lg fw-bold flex-grow-1">
                             Siparişi Kesinleştir ve Gönder
                         </button>
                     </div>

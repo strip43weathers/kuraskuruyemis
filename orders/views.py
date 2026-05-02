@@ -128,6 +128,20 @@ def order_detail(request, order_id):
     return render(request, 'orders/order_detail.html', {'order': order})
 
 
+@require_POST
+@login_required(login_url='/login/')
+def cart_remove(request, product_id):
+    """Müşterinin seçtiği ürünü sepetten siler."""
+    cart = Cart(request)
+    product = get_object_or_404(Product, id=product_id)
+
+    # Yeni eklediğimiz remove metodunu çağırıyoruz
+    cart.remove(product)
+
+    messages.success(request, f"{product.name} sepetinizden çıkarıldı.")
+    return redirect('orders:cart_detail')
+
+
 @staff_member_required
 def export_orders_to_excel(request):
     if request.method == 'POST':
