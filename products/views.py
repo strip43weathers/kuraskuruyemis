@@ -38,7 +38,7 @@ def b2b_product_list(request):
 
     # --- SAYFALAMA (PAGINATION) İŞLEMİ ---
     # Her sayfada kaç ürün gösterileceğini belirliyoruz (Örn: 12)
-    paginator = Paginator(products, 12)
+    paginator = Paginator(products, 16)
     page_number = request.GET.get('page')  # URL'den '?page=2' gibi sayfa numarasını al
 
     try:
@@ -89,7 +89,7 @@ def public_product_list(request):
         products = products.order_by('-created_at')  # Varsayılan: En yeniler
 
     # 4. Sayfalama
-    paginator = Paginator(products, 6)
+    paginator = Paginator(products, 8)
     page_number = request.GET.get('page')
 
     try:
