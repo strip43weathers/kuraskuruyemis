@@ -3,7 +3,6 @@
 
 {% block content %}
 <style>
-
     .product-card {
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         border-radius: 12px;
@@ -45,11 +44,48 @@
         border-radius: 12px;
         box-shadow: 0 4px 20px rgba(0,0,0,0.03);
     }
+    
+    /* Hero Carousel Görsel Boyutlandırması */
+    .hero-carousel-img {
+        max-height: 500px; /* Yüksekliği buradan ayarlayabilirsiniz (Örn: 250px, 400px) */
+        object-fit: cover;
+        width: 100%;
+    }
 </style>
     
-<!-- Hero Alanı -->
+<!-- Hero Alanı (Boyutu Küçültülmüş Kayan Görseller) -->
 <div class="mt-3 mb-4">
-    <img src="{% static 'img/hero1.png' %}" class="img-fluid w-100 rounded-3 shadow-sm" alt="Kuraş Kuruyemiş Kataloğu">
+    <div id="heroCarousel" class="carousel slide carousel-fade shadow-sm rounded-3 overflow-hidden" data-bs-ride="carousel" data-bs-interval="3000">
+        
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="{% static 'img/hero1.png' %}" class="d-block hero-carousel-img" alt="Kuraş Kuruyemiş Kampanya 1">
+            </div>
+            
+            <div class="carousel-item">
+                <img src="{% static 'img/hero2.png' %}" class="d-block hero-carousel-img" alt="Kuraş Kuruyemiş Kampanya 2">
+            </div>
+            
+            <div class="carousel-item">
+                <img src="{% static 'img/hero3.png' %}" class="d-block hero-carousel-img" alt="Kuraş Kuruyemiş Kampanya 3">
+            </div>
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Önceki</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Sonraki</span>
+        </button>
+    </div>
 </div>
 
 <div class="filter-bar p-3 mb-5 mt-2">
@@ -84,7 +120,8 @@
     </form>
 </div>
 
-<div class="row row-cols-2 row-cols-md-3 g-2 g-md-4">
+<!-- Yan yana 4 ürün olması için row-cols-md-3 -> row-cols-md-4 yapıldı (Büyük ekranlar için 4'lü grid) -->
+<div class="row row-cols-2 row-cols-md-4 g-2 g-md-4">
     {% for product in products %}
     <div class="col">
         <div class="card h-100 border-0 shadow-sm product-card bg-white">
