@@ -24,9 +24,29 @@ def cart_add(request, product_id):
     quantity = request.POST.get('quantity')
 
     if quantity:
-        cart.add(product=product, quantity=quantity)
+        try:
+            qty = int(float(quantity))
 
-    # Ürün eklendikten sonra sepet detay sayfasına yönlendir
+            # KONTROL 1: Minimum sipariş miktarının altında mı?
+            if qty < product.minimum_order_quantity:
+                messages.error(request,
+                               f"{product.name} için minimum sipariş miktarı {product.minimum_order_quantity | floatformat:'0'} kg'dır.")
+                return redirect(request.META.get('HTTP_REFERER', 'orders:cart_detail'))
+
+            # KONTROL 2: Girilen miktar, ürünün satış katına tam bölünmüyorsa hata ver
+            if qty % product.unit_step != 0:
+                messages.error(request,
+                               f"{product.name} ürünü sadece {product.unit_step} kg ve katları şeklinde sipariş edilebilir.")
+                return redirect(request.META.get('HTTP_REFERER', 'orders:cart_detail'))
+
+            # Sorun yoksa sepete ekle
+            cart.add(product=product, quantity=qty)
+            messages.success(request, f"{product.name} ({qty} kg) sepete eklendi.")
+
+        except ValueError:
+            messages.error(request, "Geçersiz bir miktar girdiniz.")
+            return redirect(request.META.get('HTTP_REFERER', 'orders:cart_detail'))
+
     return redirect('orders:cart_detail')
 
 

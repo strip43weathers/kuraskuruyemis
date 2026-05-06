@@ -59,12 +59,27 @@ class Product(models.Model):
         default=0.00,
         verbose_name="Stok Miktarı (KG)"
     )
+
+    UNIT_STEP_CHOICES = [
+        (1, '1 kg (Standart)'),
+        (3, '3 kg Katları'),
+        (5, '5 kg Katları'),
+    ]
+    unit_step = models.IntegerField(
+        choices=UNIT_STEP_CHOICES,
+        default=1,
+        verbose_name="B2B Satış Katı (kg)",
+        help_text="B2B kısmında bu ürünün kaçar kg'lık katlarla satılacağını belirler."
+    )
+
     minimum_order_quantity = models.DecimalField(
         max_digits=6,
         decimal_places=2,
         default=Decimal('5.00'),  # Örn: Minimum 5 KG alınabilir
         validators=[MinValueValidator(Decimal('0.10'))],
-        verbose_name="Minimum Sipariş Miktarı (KG)"
+        verbose_name="Minimum Sipariş Miktarı (KG)",
+        help_text="Lütfen üst kısımdaki 'B2B Satış Katı' ile uyumlu bir rakam girin (Örn: Katı 3 ise minimum 3, 6, 9; katı 5 ise 5, 10, 15 gibi)."
+
     )
 
     is_active = models.BooleanField(

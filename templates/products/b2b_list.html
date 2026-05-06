@@ -14,7 +14,7 @@
     }
     
     .product-img-wrapper {
-        height: 140px; 
+        height: 140px;
         overflow: hidden;
         position: relative;
     }
@@ -24,62 +24,51 @@
     .b2b-product-card:hover .product-img-wrapper img {
         transform: scale(1.08);
     }
-    
+
     .product-card-title {
-        font-size: 0.95rem; 
+        font-size: 0.95rem;
     }
     .price-text {
         font-size: 1rem;
     }
 
+    /* BÜYÜTÜLMÜŞ Miktar Seçici (Artı-Eksi) Alanı */
     .cart-input-group {
         flex-wrap: nowrap;
+        width: 100%; 
     }
-    .cart-input-group .form-control, 
-    .cart-input-group .btn, 
-    .cart-input-group .input-group-text {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.85rem;
+    .cart-input-group .form-control {
+        text-align: center;
+        background-color: #f8f9fa; /* Hafif gri arkaplan okunabilirliği artırır */
+        font-size: 1.1rem !important; /* Rakamlar daha okunaklı */
+    }
+    .cart-input-group .btn {
+        font-size: 1.2rem; /* Artı ve Eksi işaretleri daha büyük */
+        font-weight: bold;
+        padding-left: 1rem;
+        padding-right: 1rem;
     }
     
+    /* Tarayıcıların varsayılan minik yukarı/aşağı oklarını gizliyoruz */
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    input[type="number"] {
+        -moz-appearance: textfield;
+    }
+
     /* Masaüstü Ekranlar İçin (768px ve üzeri) */
     @media (min-width: 768px) {
         .product-img-wrapper {
-            height: 160px; /* 8'li düzende görsellerin çok uzamaması için 200'den 160'a çekildi */
+            height: 160px;
         }
         .product-card-title {
             font-size: 1.05rem;
         }
         .price-text {
             font-size: 1.15rem;
-        }
-    }
-
-    /* YENİ: Masaüstü (XL) Ekranlarda Yan Yana 8 Ürün İçin Özel Sınıf */
-    @media (min-width: 1200px) {
-        .row-cols-xl-8 > * {
-            flex: 0 0 auto;
-            width: 12.5%; /* 100% / 8 ürün = 12.5% */
-        }
-        
-        /* 8'li düzende kartlar çok daralacağı için iç elemanları sığdırma ayarları */
-        .row-cols-xl-8 .product-card-title { font-size: 0.85rem; }
-        .row-cols-xl-8 .price-text { font-size: 0.95rem; }
-        .row-cols-xl-8 .product-img-wrapper { height: 110px; }
-        
-        /* Input ve butonu dar alanda alt alta almak iyi bir çözümdür */
-        .row-cols-xl-8 .cart-input-group { 
-            flex-direction: column; 
-            gap: 5px; 
-        }
-        .row-cols-xl-8 .cart-input-group .form-control,
-        .row-cols-xl-8 .cart-input-group .btn { 
-            width: 100% !important; 
-            border-radius: 6px !important; 
-            text-align: center;
-        }
-        .row-cols-xl-8 .input-group-text { 
-            display: none !important; /* Yeri daraltmamak için KG textini gizle */ 
         }
     }
 </style>
@@ -125,12 +114,11 @@
     </div>
 </div>
 
-<!-- YENİ: Mobilde 2, Tablette 4, Laptpta 6, Geniş Ekranlarda 8 ürün gösterme sınıfları eklendi -->
-<div class="row row-cols-2 row-cols-md-4 row-cols-lg-6 row-cols-xl-8 g-2 g-md-3">
+<div class="row row-cols-2 row-cols-md-4 row-cols-lg-6 row-cols-xl-6 g-2 g-md-3">
     {% for product in products %}
     <div class="col">
         <div class="card h-100 border-0 shadow-sm b2b-product-card bg-white">
-            
+
             <div class="product-img-wrapper bg-light">
                 {% if product.image %}
                     <img src="{{ product.image.url }}" class="w-100 h-100" alt="{{ product.name }}" style="object-fit: cover;">
@@ -140,9 +128,9 @@
                     </div>
                 {% endif %}
             </div>
-            
+
             <div class="card-body p-2 d-flex flex-column">
-                
+
                 <div class="d-flex justify-content-between align-items-start mb-1">
                     <h5 class="card-title fw-bold mb-0 product-card-title">{{ product.name }}</h5>
                 </div>
@@ -151,35 +139,48 @@
                 <p class="card-text mb-3 flex-grow-1">
                     <span class="fw-bold text-success price-text">{{ product.wholesale_price }} TL</span> <small class="text-muted">/ kg</small>
                     <br>
+                    
                     {% if product.stock_quantity > 0 %}
                         <small class="text-success d-block mt-1" style="font-size: 0.70rem;">Stok: {{ product.stock_quantity }} kg</small>
+                        <small class="text-muted d-block" style="font-size: 0.70rem;">
+                            <i class="bi bi-info-circle me-1"></i>Min. Sipariş: {{ product.minimum_order_quantity|floatformat:"0" }} kg
+                        </small>
                     {% else %}
                         <small class="text-danger fw-bold d-block mt-1" style="font-size: 0.70rem;">Tükendi</small>
                     {% endif %}
                 </p>
 
-                <form action="{% url 'orders:cart_add' product.id %}" method="POST" class="mt-auto">
+                {% if product.stock_quantity > 0 %}
+                <form action="{% url 'orders:cart_add' product.id %}" method="post" class="mt-auto d-flex flex-column gap-2">
                     {% csrf_token %}
-                    <div class="input-group cart-input-group mb-1">
-                        <input type="number"
-                               name="quantity"
-                               class="form-control"
-                               value="{{ product.minimum_order_quantity }}"
-                               min="{{ product.minimum_order_quantity }}"
-                               max="{{ product.stock_quantity }}"
-                               step="0.01"
-                               required
-                               placeholder="KG"
-                               {% if product.stock_quantity <= 0 %}disabled{% endif %}>
+                    
+                    <div class="input-group cart-input-group">
+                        <button class="btn btn-outline-secondary" type="button" onclick="updateQty(this, -1)">
+                            -
+                        </button>
                         
-                        <span class="input-group-text bg-light d-none d-sm-block">KG</span>
-                        
-                        <button type="submit" class="btn btn-dark" {% if product.stock_quantity <= 0 %}disabled{% endif %}>
-                            Ekle
+                        <input type="number" 
+                               name="quantity" 
+                               value="{{ product.minimum_order_quantity|floatformat:'0' }}" 
+                               min="{{ product.minimum_order_quantity|floatformat:'0' }}" 
+                               step="{{ product.unit_step }}" 
+                               class="form-control text-dark fw-bold" 
+                               readonly> 
+                               
+                        <button class="btn btn-outline-secondary" type="button" onclick="updateQty(this, 1)">
+                            +
                         </button>
                     </div>
-                    <small class="text-muted d-block text-center" style="font-size: 0.65rem;">Min: {{ product.minimum_order_quantity }} kg</small>
+
+                    <button type="submit" class="btn btn-success w-100 py-2" title="Sepete Ekle">
+                        <i class="bi bi-cart-plus me-1"></i> Sepete Ekle
+                    </button>
                 </form>
+                {% else %}
+                <button class="btn btn-secondary w-100 py-2 mt-auto" disabled>
+                    Stokta Yok
+                </button>
+                {% endif %}
 
             </div>
         </div>
@@ -192,7 +193,6 @@
     </div>
     {% endfor %}
 
-<!-- Sayfalama (Pagination) Alanı -->
 {% if products.has_other_pages %}
 <nav aria-label="Ürün Sayfalama" class="mt-5 mb-4 col-12" style="width: 100%;">
     <ul class="pagination justify-content-center">
@@ -233,4 +233,22 @@
 </nav>
 {% endif %}
 </div>
+
+<script>
+function updateQty(btn, direction) {
+    var inputGroup = btn.parentElement;
+    var input = inputGroup.querySelector('input[type="number"]');
+    
+    var currentVal = parseInt(input.value) || 0;
+    var step = parseInt(input.getAttribute('step')) || 1;
+    var min = parseInt(input.getAttribute('min')) || 0;
+
+    var newVal = currentVal + (direction * step);
+
+    if (newVal >= min) {
+        input.value = newVal;
+    }
+}
+</script>
+
 {% endblock content %}
