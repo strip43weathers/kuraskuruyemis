@@ -14,7 +14,7 @@
     }
     
     .product-img-wrapper {
-        height: 140px; /* B2B kartlarında altta form olduğu için görsel mobilde biraz daha kısa */
+        height: 140px; 
         overflow: hidden;
         position: relative;
     }
@@ -32,7 +32,6 @@
         font-size: 1rem;
     }
 
-    /* Mobilde Sepete Ekle formunun sığması için daraltmalar */
     .cart-input-group {
         flex-wrap: nowrap;
     }
@@ -43,22 +42,44 @@
         font-size: 0.85rem;
     }
     
-    /* Masaüstü Ekranlar İçin (768px ve üzeri) Orijinal Boyutlar */
+    /* Masaüstü Ekranlar İçin (768px ve üzeri) */
     @media (min-width: 768px) {
         .product-img-wrapper {
-            height: 200px;
+            height: 160px; /* 8'li düzende görsellerin çok uzamaması için 200'den 160'a çekildi */
         }
         .product-card-title {
-            font-size: 1.15rem;
+            font-size: 1.05rem;
         }
         .price-text {
-            font-size: 1.25rem;
+            font-size: 1.15rem;
         }
-        .cart-input-group .form-control, 
-        .cart-input-group .btn, 
-        .cart-input-group .input-group-text {
-            padding: 0.375rem 0.75rem;
-            font-size: 1rem;
+    }
+
+    /* YENİ: Masaüstü (XL) Ekranlarda Yan Yana 8 Ürün İçin Özel Sınıf */
+    @media (min-width: 1200px) {
+        .row-cols-xl-8 > * {
+            flex: 0 0 auto;
+            width: 12.5%; /* 100% / 8 ürün = 12.5% */
+        }
+        
+        /* 8'li düzende kartlar çok daralacağı için iç elemanları sığdırma ayarları */
+        .row-cols-xl-8 .product-card-title { font-size: 0.85rem; }
+        .row-cols-xl-8 .price-text { font-size: 0.95rem; }
+        .row-cols-xl-8 .product-img-wrapper { height: 110px; }
+        
+        /* Input ve butonu dar alanda alt alta almak iyi bir çözümdür */
+        .row-cols-xl-8 .cart-input-group { 
+            flex-direction: column; 
+            gap: 5px; 
+        }
+        .row-cols-xl-8 .cart-input-group .form-control,
+        .row-cols-xl-8 .cart-input-group .btn { 
+            width: 100% !important; 
+            border-radius: 6px !important; 
+            text-align: center;
+        }
+        .row-cols-xl-8 .input-group-text { 
+            display: none !important; /* Yeri daraltmamak için KG textini gizle */ 
         }
     }
 </style>
@@ -104,7 +125,8 @@
     </div>
 </div>
 
-<div class="row row-cols-2 row-cols-md-3 g-2 g-md-4">
+<!-- YENİ: Mobilde 2, Tablette 4, Laptpta 6, Geniş Ekranlarda 8 ürün gösterme sınıfları eklendi -->
+<div class="row row-cols-2 row-cols-md-4 row-cols-lg-6 row-cols-xl-8 g-2 g-md-3">
     {% for product in products %}
     <div class="col">
         <div class="card h-100 border-0 shadow-sm b2b-product-card bg-white">
@@ -119,21 +141,20 @@
                 {% endif %}
             </div>
             
-            <div class="card-body p-2 p-md-3 d-flex flex-column">
+            <div class="card-body p-2 d-flex flex-column">
                 
-                <div class="d-flex justify-content-between align-items-start mb-1 mb-md-2">
+                <div class="d-flex justify-content-between align-items-start mb-1">
                     <h5 class="card-title fw-bold mb-0 product-card-title">{{ product.name }}</h5>
-                    <span class="badge bg-secondary d-none d-md-inline-block">{{ product.category.name }}</span>
                 </div>
-                <span class="badge bg-secondary d-md-none align-self-start mb-2" style="font-size: 0.65rem;">{{ product.category.name }}</span>
+                <span class="badge bg-secondary align-self-start mb-2" style="font-size: 0.65rem;">{{ product.category.name }}</span>
 
                 <p class="card-text mb-3 flex-grow-1">
                     <span class="fw-bold text-success price-text">{{ product.wholesale_price }} TL</span> <small class="text-muted">/ kg</small>
                     <br>
                     {% if product.stock_quantity > 0 %}
-                        <small class="text-success d-block mt-1" style="font-size: 0.75rem;">Stok: {{ product.stock_quantity }} kg</small>
+                        <small class="text-success d-block mt-1" style="font-size: 0.70rem;">Stok: {{ product.stock_quantity }} kg</small>
                     {% else %}
-                        <small class="text-danger fw-bold d-block mt-1" style="font-size: 0.75rem;">Tükendi</small>
+                        <small class="text-danger fw-bold d-block mt-1" style="font-size: 0.70rem;">Tükendi</small>
                     {% endif %}
                 </p>
 
@@ -148,6 +169,7 @@
                                max="{{ product.stock_quantity }}"
                                step="0.01"
                                required
+                               placeholder="KG"
                                {% if product.stock_quantity <= 0 %}disabled{% endif %}>
                         
                         <span class="input-group-text bg-light d-none d-sm-block">KG</span>
@@ -156,7 +178,7 @@
                             Ekle
                         </button>
                     </div>
-                    <small class="text-muted d-block text-center text-md-start" style="font-size: 0.7rem;">Min. Sipariş: {{ product.minimum_order_quantity }} kg</small>
+                    <small class="text-muted d-block text-center" style="font-size: 0.65rem;">Min: {{ product.minimum_order_quantity }} kg</small>
                 </form>
 
             </div>
@@ -170,8 +192,9 @@
     </div>
     {% endfor %}
 
+<!-- Sayfalama (Pagination) Alanı -->
 {% if products.has_other_pages %}
-<nav aria-label="Ürün Sayfalama" class="mt-5 mb-4 col-12">
+<nav aria-label="Ürün Sayfalama" class="mt-5 mb-4 col-12" style="width: 100%;">
     <ul class="pagination justify-content-center">
 
         {% if products.has_previous %}
