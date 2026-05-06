@@ -2,17 +2,28 @@
 
 {% block content %}
 <div class="premium-card p-4 p-md-5 mt-4">
-    <div class="row align-items-center">
+    <div class="row">
         <div class="col-md-6 mb-4 mb-md-0">
-            <div class="rounded-4 overflow-hidden shadow-sm" style="background: #f8f9fa;">
+            <div class="rounded-4 overflow-hidden shadow-sm mb-3" style="background: #f8f9fa;">
                 {% if product.image %}
-                    <img src="{{ product.image.url }}" class="img-fluid w-100" alt="{{ product.name }}" style="object-fit: cover; max-height: 500px;">
+                    <img id="mainImage" src="{{ product.image.url }}" class="img-fluid w-100" alt="{{ product.name }}" style="object-fit: cover; max-height: 500px; transition: opacity 0.3s ease;">
                 {% else %}
                     <div class="d-flex align-items-center justify-content-center" style="height: 400px;">
                         <i class="bi bi-camera fs-1 text-muted opacity-25"></i>
                     </div>
                 {% endif %}
             </div>
+
+            {% if product.image2 %}
+            <div class="d-flex gap-2">
+                <div class="thumb-container border rounded-3 overflow-hidden cursor-pointer active-thumb" onclick="changeImage('{{ product.image.url }}', this)" style="width: 80px; height: 80px; cursor: pointer;">
+                    <img src="{{ product.image.url }}" class="w-100 h-100" style="object-fit: cover;">
+                </div>
+                <div class="thumb-container border rounded-3 overflow-hidden cursor-pointer" onclick="changeImage('{{ product.image2.url }}', this)" style="width: 80px; height: 80px; cursor: pointer;">
+                    <img src="{{ product.image2.url }}" class="w-100 h-100" style="object-fit: cover;">
+                </div>
+            </div>
+            {% endif %}
         </div>
 
         <div class="col-md-6 ps-md-5">
@@ -25,8 +36,7 @@
 
             <h1 class="brand-font fw-bold mb-2">{{ product.name }}</h1>
             
-            <div class="d-flex align-items-center gap-3 mb-4 pb-4 border-bottom">
-                <span class="badge bg-light text-dark border px-3 py-2 rounded-pill"><i class="bi bi-upc-scan me-2"></i>SKU: {{ product.sku }}</span>
+            <div class="mb-4">
                 {% if product.show_public_price and product.public_price %}
                     <span class="badge bg-success text-white px-3 py-2 rounded-pill" style="font-size: 1.1rem;">
                         <i class="bi bi-tag-fill me-1"></i> {{ product.public_price }} ₺
@@ -39,21 +49,49 @@
                 {{ product.description|linebreaks }}
             </div>
         
-            <!-- YENİ EKLENEN KISIM: WhatsApp Sipariş Butonu -->
             {% if product.allow_whatsapp_order %}
             <div class="mb-5">
-                <!-- DİKKAT: '905555555555' yazan yere kendi numaranı boşluksuz şekilde yazmalısın -->
                 <a href="https://wa.me/905325101418?text=Merhaba, *{{ product.name }}* siparişi vermek istiyorum.%0A%0A📦 *İstediğim Miktar:* %0A📍 *Teslimat Adresim:* " 
                 target="_blank" 
                 class="btn btn-success px-4 py-3 rounded-pill fw-bold shadow-sm d-inline-flex align-items-center" 
-                style="font-size: 1.1rem; background-color: #25D366; border-color: #25D366;">
-                    <i class="bi bi-whatsapp fs-4 me-2"></i> WhatsApp'tan Sipariş Ver
+                style="font-size: 1.1rem;">
+                    <i class="bi bi-whatsapp me-2 fs-4"></i> WhatsApp ile Sipariş Ver
                 </a>
             </div>
             {% endif %}
-            <!-- BİTİŞ -->
-        
         </div>
     </div>
 </div>
+
+<style>
+    .thumb-container {
+        transition: all 0.2s ease;
+        opacity: 0.6;
+    }
+    .thumb-container:hover {
+        opacity: 1;
+        border-color: var(--brand-accent) !important;
+    }
+    .active-thumb {
+        opacity: 1;
+        border: 2px solid var(--brand-accent) !important;
+    }
+</style>
+
+<script>
+    function changeImage(url, element) {
+        const mainImg = document.getElementById('mainImage');
+        // Yumuşak geçiş efekti
+        mainImg.style.opacity = '0';
+        
+        setTimeout(() => {
+            mainImg.src = url;
+            mainImg.style.opacity = '1';
+        }, 200);
+
+        // Aktif thumbnail çerçevesini güncelle
+        document.querySelectorAll('.thumb-container').forEach(el => el.classList.remove('active-thumb'));
+        element.classList.add('active-thumb');
+    }
+</script>
 {% endblock %}

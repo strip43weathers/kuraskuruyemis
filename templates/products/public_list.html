@@ -61,12 +61,36 @@
         overflow: hidden;
         position: relative;
     }
+    
     .product-img-wrapper img {
-        transition: transform 0.5s ease;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: opacity 0.5s ease, transform 0.5s ease;
     }
-    .product-card:hover .product-img-wrapper img {
+
+    .hover-img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0;
+    }
+
+    /* 2. Görseli olanlarda: 1.yi gizle, 2.yi göster */
+    .product-card.has-hover-img:hover .primary-img {
+        opacity: 0;
         transform: scale(1.08);
     }
+    .product-card.has-hover-img:hover .hover-img {
+        opacity: 1;
+        transform: scale(1.08);
+    }
+
+    /* 2. Görseli OLMAYANLARDA: Sadece ana görseli büyütmeye devam et */
+    .product-card:not(.has-hover-img):hover .primary-img {
+        transform: scale(1.08);
+    }
+
     .product-card-title {
         font-size: 0.95rem; 
     }
@@ -88,7 +112,7 @@
     
     /* Hero Carousel Görsel Boyutlandırması */
     .hero-carousel-img {
-        height: 530px; /* max-height yerine tam ekran uyumu için sabit height atandı */
+        height: 530px; 
         object-fit: cover;
         width: 100%;
     }
@@ -129,11 +153,14 @@
 <div class="row row-cols-2 row-cols-md-4 g-2 g-md-4">
     {% for product in products %}
     <div class="col">
-        <div class="card h-100 border-0 shadow-sm product-card bg-white">
+        <div class="card h-100 border-0 shadow-sm product-card bg-white {% if product.image2 %}has-hover-img{% endif %}">
 
             <div class="product-img-wrapper" style="background: #f8f9fa;">
                 {% if product.image %}
-                    <img src="{{ product.image.url }}" class="w-100 h-100" alt="{{ product.name }}" style="object-fit: cover;">
+                    <img src="{{ product.image.url }}" class="primary-img" alt="{{ product.name }}">
+                    {% if product.image2 %}
+                        <img src="{{ product.image2.url }}" class="hover-img" alt="{{ product.name }}">
+                    {% endif %}
                 {% else %}
                     <div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted">
                         <i class="bi bi-image" style="font-size: 2rem; opacity: 0.2;"></i>
