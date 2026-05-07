@@ -4,11 +4,11 @@
 {% block hero %}
 <div class="container-fluid px-3 px-lg-5 mb-4 mt-3"> 
     {% if hero_slides %}
-    <div id="heroCarousel" class="carousel slide carousel-fade rounded-4 overflow-hidden shadow-sm" data-bs-ride="carousel" data-bs-interval="3500">
+    <div id="heroCarousel" class="carousel slide carousel-fade rounded-4 overflow-hidden shadow-sm" data-bs-ride="carousel" data-bs-interval="3500" data-bs-wrap="true">
 
         <div class="carousel-indicators" style="z-index: 20;">
             {% for slide in hero_slides %}
-                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="{{ forloop.index0 }}" {% if forloop.first %}class="active" aria-current="true"{% endif %} aria-label="Slide {{ forloop.index }}"></button>
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}" {% if forloop.first %}aria-current="true"{% endif %} aria-label="Slide {{ forloop.counter }}"></button>
             {% endfor %}
         </div>
 
@@ -26,11 +26,11 @@
             {% endfor %}
         </div>
 
-        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev" style="z-index: 20;">
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev" style="z-index: 25; position: absolute;">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Önceki</span>
         </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next" style="z-index: 20;">
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next" style="z-index: 25; position: absolute;">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Sonraki</span>
         </button>
@@ -82,10 +82,10 @@
 
     /* Kampanya Afişleri Stilleri - YATAY KAYDIRMALI */
     .campaign-container {
-        background-color: #4A2E1B;
+        background-color: #ECE0D1;
         border-radius: 20px;
         padding: 45px 20px;
-        margin-top: 1rem;
+        margin-top: 3rem; /* Yukarıdan biraz daha boşluk bıraktık ki sayfalama butonlarına yapışmasın */
         margin-bottom: 3rem;
     }
 
@@ -125,27 +125,6 @@
     }
     .campaign-banner img { width: 100%; height: 100%; object-fit: cover; }
 </style>
-
-{% if campaigns %}
-<div class="campaign-container shadow-sm w-100">
-    <div class="campaign-scroll-wrapper px-2 px-lg-4">
-        {% for campaign in campaigns %}
-        <div class="campaign-scroll-item">
-            <a href="?campaign={{ campaign.id }}" class="campaign-banner shadow text-decoration-none">
-                {% if campaign.image %}
-                    <img src="{{ campaign.image.url }}" alt="{{ campaign.title }}">
-                {% else %}
-                    <div class="bg-white p-4 text-center rounded d-flex flex-column align-items-center justify-content-center h-100">
-                        <h4 class="text-danger fw-bold mb-0 brand-font">{{ campaign.title }}</h4>
-                        <small class="text-muted mt-2">Ürünleri Gör <i class="bi bi-arrow-right"></i></small>
-                    </div>
-                {% endif %}
-            </a>
-        </div>
-        {% endfor %}
-    </div>
-</div>
-{% endif %}
 
 {% if active_campaign %}
 <div class="alert alert-danger d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 border-0 shadow-sm rounded-4" style="background-color: #fcf0f0; color: #C1121F;">
@@ -252,8 +231,33 @@
 </nav>
 {% endif %}
 
+<!-- KAMPANYA BLOĞU BURAYA TAŞINDI -->
+{% if campaigns %}
+<div class="campaign-container shadow-sm w-100">
+    <div class="campaign-scroll-wrapper px-2 px-lg-4">
+        {% for campaign in campaigns %}
+        <div class="campaign-scroll-item">
+            <a href="?campaign={{ campaign.id }}" class="campaign-banner shadow text-decoration-none">
+                {% if campaign.image %}
+                    <img src="{{ campaign.image.url }}" alt="{{ campaign.title }}">
+                {% else %}
+                    <div class="bg-white p-4 text-center rounded d-flex flex-column align-items-center justify-content-center h-100">
+                        <h4 class="text-danger fw-bold mb-0 brand-font">{{ campaign.title }}</h4>
+                        <small class="text-muted mt-2">Ürünleri Gör <i class="bi bi-arrow-right"></i></small>
+                    </div>
+                {% endif %}
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+<!-- KAMPANYA BLOĞU SONU -->
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        
+        // Kampanya Slider JS'i
         const scrollWrapper = document.querySelector('.campaign-scroll-wrapper');
         if (!scrollWrapper) return;
         
