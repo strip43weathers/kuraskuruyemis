@@ -47,7 +47,9 @@ def cart_add(request, product_id):
             messages.error(request, "Geçersiz bir miktar girdiniz.")
             return redirect(request.META.get('HTTP_REFERER', 'orders:cart_detail'))
 
-    return redirect('orders:cart_detail')
+    # DEĞİŞİKLİK BURADA: Direkt sepet detayına gitmek yerine, kullanıcının geldiği sayfaya geri döndürüyoruz.
+    # Eğer geldiği sayfa bilgisi (HTTP_REFERER) yoksa, yedek olarak ürün listesine veya sepete yönlendirebilirsin.
+    return redirect(request.META.get('HTTP_REFERER', 'products:b2b_list'))
 
 
 @login_required(login_url='/login/')
