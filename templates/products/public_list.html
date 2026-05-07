@@ -4,9 +4,9 @@
 {% block hero %}
 <div class="container-fluid px-3 px-lg-5 mb-4 mt-3"> 
     {% if hero_slides %}
-    <div id="heroCarousel" class="carousel slide carousel-fade rounded-4 overflow-hidden shadow-sm" data-bs-ride="carousel" data-bs-interval="3000">
+    <div id="heroCarousel" class="carousel slide carousel-fade rounded-4 overflow-hidden shadow-sm" data-bs-ride="carousel" data-bs-interval="3500">
 
-        <div class="carousel-indicators">
+        <div class="carousel-indicators" style="z-index: 20;">
             {% for slide in hero_slides %}
                 <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="{{ forloop.index0 }}" {% if forloop.first %}class="active" aria-current="true"{% endif %} aria-label="Slide {{ forloop.index }}"></button>
             {% endfor %}
@@ -15,22 +15,22 @@
         <div class="carousel-inner">
             {% for slide in hero_slides %}
             <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                
+                <img src="{{ slide.image.url }}" class="d-block w-100 hero-carousel-img" alt="{{ slide.title }}">
+                
                 {% if slide.products.all %}
-                    <a href="?hero={{ slide.id }}">
-                        <img src="{{ slide.image.url }}" class="d-block hero-carousel-img" alt="{{ slide.title }}">
-                    </a>
-                {% else %}
-                    <img src="{{ slide.image.url }}" class="d-block hero-carousel-img" alt="{{ slide.title }}">
+                    <a href="?hero={{ slide.id }}" class="position-absolute top-0 start-0 w-100 h-100" style="z-index: 10;"></a>
                 {% endif %}
+                
             </div>
             {% endfor %}
         </div>
 
-        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev" style="z-index: 20;">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Önceki</span>
         </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next" style="z-index: 20;">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Sonraki</span>
         </button>
@@ -82,7 +82,7 @@
 
     /* Kampanya Afişleri Stilleri - YATAY KAYDIRMALI */
     .campaign-container {
-        background-color: #C1121F;
+        background-color: #4A2E1B;
         border-radius: 20px;
         padding: 45px 20px;
         margin-top: 1rem;
@@ -256,24 +256,34 @@
     document.addEventListener("DOMContentLoaded", function() {
         const scrollWrapper = document.querySelector('.campaign-scroll-wrapper');
         if (!scrollWrapper) return;
+        
         let autoScrollInterval;
+        
         function startAutoScroll() {
             autoScrollInterval = setInterval(() => {
-                const firstItem = scrollWrapper.querySelector('.campaign-scroll-item');
-                if (!firstItem) return;
-                const scrollAmount = firstItem.offsetWidth + 24;
-                if (scrollWrapper.scrollLeft + scrollWrapper.clientWidth >= scrollWrapper.scrollWidth - 10) {
-                    scrollWrapper.scrollTo({ left: 0, behavior: 'smooth' });
-                } else {
-                    scrollWrapper.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-                }
+                try {
+                    const firstItem = scrollWrapper.querySelector('.campaign-scroll-item');
+                    if (!firstItem) return;
+                    
+                    const scrollAmount = firstItem.offsetWidth + 24; 
+                    const maxScrollLeft = scrollWrapper.scrollWidth - scrollWrapper.clientWidth;
+                    
+                    if (scrollWrapper.scrollLeft >= maxScrollLeft - 15) {
+                        scrollWrapper.scrollTo({ left: 0, behavior: 'smooth' });
+                    } else {
+                        scrollWrapper.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                    }
+                } catch(e) {}
             }, 3500); 
         }
+        
         function stopAutoScroll() { clearInterval(autoScrollInterval); }
+        
         scrollWrapper.addEventListener('mouseenter', stopAutoScroll);
         scrollWrapper.addEventListener('mouseleave', startAutoScroll);
         scrollWrapper.addEventListener('touchstart', stopAutoScroll, {passive: true});
         scrollWrapper.addEventListener('touchend', startAutoScroll, {passive: true});
+        
         startAutoScroll();
     });
 </script>    
