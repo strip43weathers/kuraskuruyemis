@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger  # YENİ: Paginator sınıfları eklendi
-from .models import Category, Product, ContactMessage, FAQ, Campaign
+from .models import Category, Product, ContactMessage, FAQ, Campaign, HeroSlide
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.core.mail import send_mail
@@ -61,34 +61,42 @@ def b2b_product_list(request):
     return render(request, 'products/b2b_list.html', context)
 
 
+# views.py içindeki public_product_list fonksiyonunu bununla değiştirin:
+
 def public_product_list(request):
     """Fiyatların ve sepetin olmadığı halka açık katalog."""
     products = Product.objects.filter(is_active=True, is_public=True).select_related('category')
     categories = Category.objects.filter(is_active=True)
     campaigns = Campaign.objects.filter(is_active=True)
 
+    # YENİ: Hero slaytlarını ürünleriyle birlikte çekiyoruz
+    hero_slides = HeroSlide.objects.filter(is_active=True).prefetch_related('products')
+
     query = request.GET.get('q', '')
     category_id = request.GET.get('category', '')
     sort_by = request.GET.get('sort', 'newest')
-
-    # YENİ: URL'den tıklanan kampanya bilgisini alıyoruz
     campaign_id = request.GET.get('campaign', '')
+
+    # YENİ: URL'den tıklanan hero slaytı bilgisini alıyoruz
+    hero_id = request.GET.get('hero', '')
 
     # 1. Arama Filtresi
     if query:
-        products = products.filter(
-            Q(name__icontains=query) | Q(sku__icontains=query)
-        )
+        products = products.filter(Q(name__icontains=query) | Q(sku__icontains=query))
 
     # 2. Kategori Filtresi
     if category_id:
         products = products.filter(category_id=category_id)
 
-    # 3. YENİ: Kampanya Filtresi (Afişe tıklanınca sadece o kampanyanın ürünleri gelir)
+    # 3. Kampanya Filtresi
     if campaign_id:
         products = products.filter(campaigns__id=campaign_id)
 
-    # 4. Sıralama İşlemi
+    # YENİ: Hero Slaytı Filtresi
+    if hero_id:
+        products = products.filter(hero_slides__id=hero_id)
+
+    # Sıralama İşlemi
     if sort_by == 'name_asc':
         products = products.order_by('name')
     elif sort_by == 'name_desc':
@@ -107,10 +115,14 @@ def public_product_list(request):
     except EmptyPage:
         products_paginated = paginator.page(paginator.num_pages)
 
-    # Seçili kampanyanın başlığını ekrana yazdırabilmek için verisini alıyoruz
     active_campaign = None
     if campaign_id:
         active_campaign = Campaign.objects.filter(id=campaign_id).first()
+
+    # YENİ: Eğer slayta tıklandıysa, başlığını ekrana yazdırabilmek için verisini alıyoruz
+    active_hero = None
+    if hero_id:
+        active_hero = HeroSlide.objects.filter(id=hero_id).first()
 
     context = {
         'products': products_paginated,
@@ -118,9 +130,12 @@ def public_product_list(request):
         'current_query': query,
         'current_category': category_id,
         'current_sort': sort_by,
-        'current_campaign': campaign_id,  # YENİ
-        'active_campaign': active_campaign,  # YENİ
+        'current_campaign': campaign_id,
+        'active_campaign': active_campaign,
+        'current_hero': hero_id,  # YENİ
+        'active_hero': active_hero,  # YENİ
         'campaigns': campaigns,
+        'hero_slides': hero_slides,  # YENİ
     }
 
     return render(request, 'products/public_list.html', context)

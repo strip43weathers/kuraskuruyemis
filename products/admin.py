@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product, ContactMessage, Campaign
+from .models import Category, Product, ContactMessage, Campaign, FAQ, HeroSlide
 
 
 @admin.register(Category)
@@ -33,14 +33,12 @@ class ContactMessageAdmin(admin.ModelAdmin):
     list_editable = ['is_read']
 
 
-# products/admin.py
-from .models import FAQ # FAQ modelini projene import etmeyi unutma
-
 @admin.register(FAQ)
 class FAQAdmin(admin.ModelAdmin):
     list_display = ('question', 'order', 'is_active')
     list_editable = ('order', 'is_active') # Admin listesinden direkt sırasını değiştirebilirsin
     search_fields = ('question', 'answer')
+
 
 
 @admin.register(Campaign)
@@ -50,3 +48,25 @@ class CampaignAdmin(admin.ModelAdmin):
     # Ürünleri sağa-sola atarak kolayca seçmek için:
     filter_horizontal = ('products',)
     search_fields = ('title',)
+
+
+# admin.py dosyasının en altındaki HeroSlideAdmin sınıfını BUNUNLA DEĞİŞTİR:
+
+@admin.register(HeroSlide)
+class HeroSlideAdmin(admin.ModelAdmin):
+    # 'product' yerine kendi yazdığımız 'get_products' fonksiyonunu çağırıyoruz
+    list_display = ('title', 'get_products', 'order', 'is_active')
+    list_editable = ('order', 'is_active')
+    filter_horizontal = ('products',)
+    search_fields = ('title',)
+
+    # Çoklu seçilen ürünleri aralarına virgül koyarak yan yana yazdırmak için özel fonksiyon:
+    def get_products(self, obj):
+        # Eğer çok fazla ürün seçilirse tablo taşmasın diye ilk 3'ünü gösterip sonuna ... koyabiliriz
+        products = obj.products.all()
+        if products.exists():
+            return ", ".join([p.name for p in products[:3]]) + ("..." if products.count() > 3 else "")
+        return "-"
+
+    # Admin panelindeki sütun başlığının adı:
+    get_products.short_description = "Seçili Ürünler"

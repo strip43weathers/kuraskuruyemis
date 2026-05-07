@@ -167,3 +167,28 @@ class Campaign(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class HeroSlide(models.Model):
+    title = models.CharField(max_length=150, verbose_name="Slayt Başlığı (Sadece Admin Görür)")
+    image = models.ImageField(upload_to='hero/%Y/%m/', verbose_name="Hero Görseli (Tavsiye: 1920x530)")
+
+    # YENİ: Tek ürün yerine çoklu ürün seçimi
+    products = models.ManyToManyField(
+        Product,
+        related_name='hero_slides',
+        verbose_name="Yönlendirilecek Ürünler (Opsiyonel)",
+        blank=True,
+        help_text="Eğer ürün seçerseniz, slayta tıklandığında sayfa sadece o ürünleri listeleyecek şekilde filtrelenir."
+    )
+
+    order = models.PositiveIntegerField(default=0, verbose_name="Sıralama")
+    is_active = models.BooleanField(default=True, verbose_name="Yayında mı?")
+
+    class Meta:
+        ordering = ['order', '-id']
+        verbose_name = "Hero Slaytı"
+        verbose_name_plural = "Hero Slaytları"
+
+    def __str__(self):
+        return self.title
