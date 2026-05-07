@@ -78,7 +78,24 @@
         .product-img-wrapper { height: 260px; }
         .product-card-title { font-size: 1.25rem; }
     }
-    .hero-carousel-img { height: 530px; object-fit: cover; width: 100%; }
+    /* Hero Görseli Varsayılan (Mobil) Yüksekliği */
+    .hero-carousel-img { 
+        height: 250px; /* Mobilde yatay ve estetik durması için kısaltıldı */
+        object-fit: cover; 
+        width: 100%; 
+    }
+
+    /* Tablet Ekranlar İçin (768px ve üzeri) */
+    @media (min-width: 768px) {
+        .product-img-wrapper { height: 260px; }
+        .product-card-title { font-size: 1.25rem; }
+        .hero-carousel-img { height: 400px; } /* Tablette biraz daha yüksek */
+    }
+
+    /* Masaüstü Ekranlar İçin (992px ve üzeri) */
+    @media (min-width: 992px) {
+        .hero-carousel-img { height: 530px; } /* Masaüstünde senin orjinal boyutun */
+    }
 
     /* Kampanya Afişleri Stilleri - YATAY KAYDIRMALI */
     .campaign-container {
