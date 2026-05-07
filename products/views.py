@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger  # YENİ: Paginator sınıfları eklendi
-from .models import Category, Product, ContactMessage
+from .models import Category, Product, ContactMessage, FAQ, Campaign
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.core.mail import send_mail
@@ -65,10 +65,14 @@ def public_product_list(request):
     """Fiyatların ve sepetin olmadığı halka açık katalog."""
     products = Product.objects.filter(is_active=True, is_public=True).select_related('category')
     categories = Category.objects.filter(is_active=True)
+    campaigns = Campaign.objects.filter(is_active=True)
 
     query = request.GET.get('q', '')
     category_id = request.GET.get('category', '')
-    sort_by = request.GET.get('sort', 'newest')  # YENİ: Sıralama parametresi
+    sort_by = request.GET.get('sort', 'newest')
+
+    # YENİ: URL'den tıklanan kampanya bilgisini alıyoruz
+    campaign_id = request.GET.get('campaign', '')
 
     # 1. Arama Filtresi
     if query:
@@ -80,15 +84,19 @@ def public_product_list(request):
     if category_id:
         products = products.filter(category_id=category_id)
 
-    # 3. YENİ: Sıralama İşlemi (Fiyatlar gizli olduğu için fiyata göre sıralama yok)
+    # 3. YENİ: Kampanya Filtresi (Afişe tıklanınca sadece o kampanyanın ürünleri gelir)
+    if campaign_id:
+        products = products.filter(campaigns__id=campaign_id)
+
+    # 4. Sıralama İşlemi
     if sort_by == 'name_asc':
         products = products.order_by('name')
     elif sort_by == 'name_desc':
         products = products.order_by('-name')
     else:
-        products = products.order_by('-created_at')  # Varsayılan: En yeniler
+        products = products.order_by('-created_at')
 
-    # 4. Sayfalama
+    # Sayfalama
     paginator = Paginator(products, 15)
     page_number = request.GET.get('page')
 
@@ -99,12 +107,20 @@ def public_product_list(request):
     except EmptyPage:
         products_paginated = paginator.page(paginator.num_pages)
 
+    # Seçili kampanyanın başlığını ekrana yazdırabilmek için verisini alıyoruz
+    active_campaign = None
+    if campaign_id:
+        active_campaign = Campaign.objects.filter(id=campaign_id).first()
+
     context = {
         'products': products_paginated,
         'categories': categories,
         'current_query': query,
         'current_category': category_id,
-        'current_sort': sort_by,  # YENİ: Seçilen sıralamayı şablona yolluyoruz
+        'current_sort': sort_by,
+        'current_campaign': campaign_id,  # YENİ
+        'active_campaign': active_campaign,  # YENİ
+        'campaigns': campaigns,
     }
 
     return render(request, 'products/public_list.html', context)

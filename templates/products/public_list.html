@@ -46,6 +46,7 @@
 
 {% block content %}
 <style>
+    /* Ürün Kartı Stilleri */
     .product-card {
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         border-radius: 12px;
@@ -55,79 +56,142 @@
         transform: translateY(-8px);
         box-shadow: 0 15px 35px rgba(0,0,0,0.08) !important;
     }
-
     .product-img-wrapper {
         height: 150px;
         overflow: hidden;
         position: relative;
     }
-    
     .product-img-wrapper img {
         width: 100%;
         height: 100%;
         object-fit: cover;
         transition: opacity 0.5s ease, transform 0.5s ease;
     }
-
     .hover-img {
         position: absolute;
         top: 0;
         left: 0;
         opacity: 0;
     }
+    .product-card.has-hover-img:hover .primary-img { opacity: 0; transform: scale(1.08); }
+    .product-card.has-hover-img:hover .hover-img { opacity: 1; transform: scale(1.08); }
+    .product-card:not(.has-hover-img):hover .primary-img { transform: scale(1.08); }
 
-    /* 2. Görseli olanlarda: 1.yi gizle, 2.yi göster */
-    .product-card.has-hover-img:hover .primary-img {
-        opacity: 0;
-        transform: scale(1.08);
-    }
-    .product-card.has-hover-img:hover .hover-img {
-        opacity: 1;
-        transform: scale(1.08);
-    }
-
-    /* 2. Görseli OLMAYANLARDA: Sadece ana görseli büyütmeye devam et */
-    .product-card:not(.has-hover-img):hover .primary-img {
-        transform: scale(1.08);
-    }
-
-    .product-card-title {
-        font-size: 0.95rem; 
-    }
+    .product-card-title { font-size: 0.95rem; }
 
     @media (min-width: 768px) {
-        .product-img-wrapper {
-            height: 260px;
-        }
-        .product-card-title {
-            font-size: 1.25rem;
-        }
+        .product-img-wrapper { height: 260px; }
+        .product-card-title { font-size: 1.25rem; }
     }
-    
-    /* Hero Carousel Görsel Boyutlandırması */
-    .hero-carousel-img {
-        height: 530px; 
-        object-fit: cover;
+    .hero-carousel-img { height: 530px; object-fit: cover; width: 100%; }
+
+    /* Kampanya Afişleri (Banner) Stilleri - YATAY KAYDIRMALI */
+    .campaign-container {
+        background-color: #C1121F;
+        border-radius: 20px;
+        padding: 45px 20px;
+        margin-top: 1rem;
+        margin-bottom: 3rem;
+    }
+
+    .campaign-scroll-wrapper {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 1.5rem;
+        padding-bottom: 1rem;
+        /* Scroll yaparken afişlerin tam hizaya oturması için */
+        scroll-snap-type: x mandatory; 
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .campaign-scroll-item {
+        flex: 0 0 auto;
+        width: 85%; 
+        max-width: 380px; 
+        scroll-snap-align: start;
+        height: 220px; 
+    }
+
+    /* Yatay Scrollbar'ı Güzelleştirme */
+    .campaign-scroll-wrapper::-webkit-scrollbar {
+        height: 8px;
+    }
+    .campaign-scroll-wrapper::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        margin: 0 15px; 
+    }
+    .campaign-scroll-wrapper::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 10px;
+    }
+    .campaign-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    .campaign-banner {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-radius: 16px;
+        overflow: hidden;
+        display: block;
+        height: 100%;
+    }
+    .campaign-banner:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.3) !important;
+    }
+    .campaign-banner img {
         width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
 </style>
 
-<!-- Sadece Sıralama Menüsü -->
+{% if campaigns %}
+<div class="campaign-container shadow-sm w-100">
+    <div class="campaign-scroll-wrapper px-2 px-lg-4">
+        {% for campaign in campaigns %}
+        <div class="campaign-scroll-item">
+            <a href="?campaign={{ campaign.id }}" class="campaign-banner shadow text-decoration-none">
+                {% if campaign.image %}
+                    <img src="{{ campaign.image.url }}" alt="{{ campaign.title }}">
+                {% else %}
+                    <div class="bg-white p-4 text-center rounded d-flex flex-column align-items-center justify-content-center h-100">
+                        <h4 class="text-danger fw-bold mb-0 brand-font">{{ campaign.title }}</h4>
+                        <small class="text-muted mt-2">Ürünleri Gör <i class="bi bi-arrow-right"></i></small>
+                    </div>
+                {% endif %}
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+{% if active_campaign %}
+<div class="alert alert-danger d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 border-0 shadow-sm rounded-4" style="background-color: #fcf0f0; color: #C1121F;">
+    <h4 class="mb-2 mb-md-0 fw-bold brand-font"><i class="bi bi-star-fill me-2 text-warning"></i> {{ active_campaign.title }}</h4>
+    <a href="{% url 'home' %}" class="btn btn-danger btn-sm rounded-pill px-3 shadow-sm">Tüm Ürünlere Dön</a>
+</div>
+{% endif %}
+
 <div class="d-flex justify-content-end mb-4 mt-2 px-2 px-md-0">
     <form method="GET" action="{% url 'home' %}" class="d-inline-flex align-items-center bg-white rounded-pill shadow-sm px-3 py-1 border">
         
-        <!-- Navbar'dan gelen arama ve kategori verilerini kaybetmemek için gizli inputlar -->
         {% if current_query %}
             <input type="hidden" name="q" value="{{ current_query }}">
         {% endif %}
         {% if current_category %}
             <input type="hidden" name="category" value="{{ current_category }}">
         {% endif %}
+        {% if current_campaign %}
+            <input type="hidden" name="campaign" value="{{ current_campaign }}">
+        {% endif %} 
 
         <i class="bi bi-sort-down text-brand me-2"></i>
         <span class="text-muted small me-2 d-none d-md-inline" style="white-space: nowrap;">Sırala:</span>
         
-        <!-- onchange="this.form.submit()" sayesinde butona gerek kalmadan seçim yapılınca sayfa yenilenir -->
         <select name="sort" class="form-select border-0 shadow-none bg-transparent fw-medium text-dark py-1" onchange="this.form.submit()" style="cursor: pointer; min-width: 140px; font-size: 0.9rem;">
             <option value="newest" {% if current_sort == 'newest' %}selected{% endif %}>En Yeniler</option>
             <option value="name_asc" {% if current_sort == 'name_asc' %}selected{% endif %}>Ürün Adı (A-Z)</option>
@@ -191,22 +255,64 @@
     <ul class="pagination justify-content-center gap-2">
         {% if products.has_previous %}
             <li class="page-item">
-                <a class="page-link rounded-circle border-0 text-dark bg-light shadow-sm" href="?page={{ products.previous_page_number }}&q={{ current_query }}&category={{ current_category }}&sort={{ current_sort }}"><i class="bi bi-chevron-left"></i></a>
+                <a class="page-link rounded-circle border-0 text-dark bg-light shadow-sm" href="?page={{ products.previous_page_number }}&q={{ current_query }}&category={{ current_category }}&sort={{ current_sort }}&campaign={{ current_campaign }}"><i class="bi bi-chevron-left"></i></a>
             </li>
         {% endif %}
 
         {% for i in products.paginator.page_range %}
             <li class="page-item">
-                <a class="page-link rounded-circle border-0 shadow-sm {% if products.number == i %}bg-dark text-white{% else %}text-dark bg-light{% endif %}" href="?page={{ i }}&q={{ current_query }}&category={{ current_category }}&sort={{ current_sort }}" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-weight: 600;">{{ i }}</a>
+                <a class="page-link rounded-circle border-0 shadow-sm {% if products.number == i %}bg-dark text-white{% else %}text-dark bg-light{% endif %}" href="?page={{ i }}&q={{ current_query }}&category={{ current_category }}&sort={{ current_sort }}&campaign={{ current_campaign }}" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-weight: 600;">{{ i }}</a>
             </li>
         {% endfor %}
 
         {% if products.has_next %}
             <li class="page-item">
-                <a class="page-link rounded-circle border-0 text-dark bg-light shadow-sm" href="?page={{ products.next_page_number }}&q={{ current_query }}&category={{ current_category }}&sort={{ current_sort }}"><i class="bi bi-chevron-right"></i></a>
+                <a class="page-link rounded-circle border-0 text-dark bg-light shadow-sm" href="?page={{ products.next_page_number }}&q={{ current_query }}&category={{ current_category }}&sort={{ current_sort }}&campaign={{ current_campaign }}"><i class="bi bi-chevron-right"></i></a>
             </li>
         {% endif %}
     </ul>
 </nav>
 {% endif %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const scrollWrapper = document.querySelector('.campaign-scroll-wrapper');
+        
+        // Eğer sayfada kampanya yoksa boşuna çalışmasın
+        if (!scrollWrapper) return;
+
+        let autoScrollInterval;
+        
+        function startAutoScroll() {
+            // Her 3500 milisaniyede (3.5 saniye) bir çalışır
+            autoScrollInterval = setInterval(() => {
+                const firstItem = scrollWrapper.querySelector('.campaign-scroll-item');
+                if (!firstItem) return;
+                
+                // Bir kartın genişliği + aralarındaki boşluk (gap: 1.5rem = yaklaşık 24px)
+                const scrollAmount = firstItem.offsetWidth + 24;
+                
+                // Eğer en sağa ulaştıysak yumuşakça en başa dön
+                if (scrollWrapper.scrollLeft + scrollWrapper.clientWidth >= scrollWrapper.scrollWidth - 10) {
+                    scrollWrapper.scrollTo({ left: 0, behavior: 'smooth' });
+                } else {
+                    // Ulaşmadıysak bir kart boyutu kadar sağa kaydır
+                    scrollWrapper.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                }
+            }, 3500); 
+        }
+
+        function stopAutoScroll() {
+            clearInterval(autoScrollInterval);
+        }
+
+        // Müşteri incelerken veya tıklayacakken kaymayı durdur (Kullanıcı Dostu Özellik)
+        scrollWrapper.addEventListener('mouseenter', stopAutoScroll);
+        scrollWrapper.addEventListener('mouseleave', startAutoScroll);
+        scrollWrapper.addEventListener('touchstart', stopAutoScroll, {passive: true});
+        scrollWrapper.addEventListener('touchend', startAutoScroll, {passive: true});
+
+        // Sayfa yüklendiğinde otomatik kaydırmayı başlat
+        startAutoScroll();
+    });
+</script>    
 {% endblock content %}

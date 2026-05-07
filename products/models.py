@@ -142,3 +142,28 @@ class FAQ(models.Model):
 
     def __str__(self):
         return self.question
+
+
+# models.py dosyasının EN ALTINA ekleyin
+
+# models.py içindeki Campaign modelini şu şekilde değiştirin:
+
+class Campaign(models.Model):
+    title = models.CharField(max_length=150, verbose_name="Kampanya/Bölüm Başlığı", help_text="Örn: En Sevilen Ürünler")
+    # Görsel opsiyonel olsun, eğer sadece başlık ve ürünler görünsün istersen diye
+    image = models.ImageField(upload_to='campaigns/%Y/%m/', verbose_name="Bölüm Banner Görseli (Opsiyonel)", blank=True,
+                              null=True)
+
+    # YENİ: Tek bir ürün yerine çoklu ürün seçimi
+    products = models.ManyToManyField(Product, related_name='campaigns', verbose_name="Kampanyaya Dahil Ürünler")
+
+    order = models.PositiveIntegerField(default=0, verbose_name="Sıralama")
+    is_active = models.BooleanField(default=True, verbose_name="Yayında mı?")
+
+    class Meta:
+        ordering = ['order', '-id']
+        verbose_name = "Özel Bölüm / Kampanya"
+        verbose_name_plural = "Özel Bölümler / Kampanyalar"
+
+    def __str__(self):
+        return self.title

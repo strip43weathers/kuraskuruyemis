@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product, ContactMessage
+from .models import Category, Product, ContactMessage, Campaign
 
 
 @admin.register(Category)
@@ -41,3 +41,12 @@ class FAQAdmin(admin.ModelAdmin):
     list_display = ('question', 'order', 'is_active')
     list_editable = ('order', 'is_active') # Admin listesinden direkt sırasını değiştirebilirsin
     search_fields = ('question', 'answer')
+
+
+@admin.register(Campaign)
+class CampaignAdmin(admin.ModelAdmin):
+    list_display = ('title', 'order', 'is_active')
+    list_editable = ('order', 'is_active')
+    # Ürünleri sağa-sola atarak kolayca seçmek için:
+    filter_horizontal = ('products',)
+    search_fields = ('title',)
