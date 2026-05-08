@@ -143,7 +143,7 @@
                     {% if product.stock_quantity > 0 %}
                         <small class="text-success d-block mt-1" style="font-size: 0.70rem;">Stok: {{ product.stock_quantity }} kg</small>
                         <small class="text-muted d-block" style="font-size: 0.70rem;">
-                            <i class="bi bi-info-circle me-1"></i>Min. Sipariş: {{ product.minimum_order_quantity|floatformat:"0" }} kg
+                            <i class="bi bi-info-circle me-1"></i>Min. Sipariş: {{ product.minimum_order_quantity|floatformat:"1" }} kg
                         </small>
                     {% else %}
                         <small class="text-danger fw-bold d-block mt-1" style="font-size: 0.70rem;">Tükendi</small>
@@ -161,9 +161,9 @@
                         
                         <input type="number" 
                                name="quantity" 
-                               value="{{ product.minimum_order_quantity|floatformat:'0' }}" 
-                               min="{{ product.minimum_order_quantity|floatformat:'0' }}" 
-                               step="{{ product.unit_step }}" 
+                               value="{{ product.minimum_order_quantity|stringformat:'s' }}" 
+                               min="{{ product.minimum_order_quantity|stringformat:'s' }}" 
+                               step="{{ product.unit_step|stringformat:'s' }}" 
                                class="form-control text-dark fw-bold" 
                                readonly> 
                                
@@ -239,14 +239,16 @@ function updateQty(btn, direction) {
     var inputGroup = btn.parentElement;
     var input = inputGroup.querySelector('input[type="number"]');
     
-    var currentVal = parseInt(input.value) || 0;
-    var step = parseInt(input.getAttribute('step')) || 1;
-    var min = parseInt(input.getAttribute('min')) || 0;
+    // Ondalıklı sayıları desteklemesi için parseFloat kullanıyoruz
+    var currentVal = parseFloat(input.value) || 0;
+    var step = parseFloat(input.getAttribute('step')) || 1;
+    var min = parseFloat(input.getAttribute('min')) || 0;
 
     var newVal = currentVal + (direction * step);
 
     if (newVal >= min) {
-        input.value = newVal;
+        // Javascript'in küsuratları uzatmaması için (Örn: 2.5 yerine 2.5000001 çıkmaması için) formatlıyoruz
+        input.value = parseFloat(newVal.toFixed(2));
     }
 }
 </script>

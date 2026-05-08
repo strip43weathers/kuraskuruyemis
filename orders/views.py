@@ -1,10 +1,12 @@
+# orders/views.py
+
 import openpyxl
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.db import transaction
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from products.models import Product
 from .models import Order, OrderItem
 from .cart import Cart
@@ -20,35 +22,32 @@ def cart_add(request, product_id):
     cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)
 
-    # HTML formundan gelecek 'quantity' değerini alıyoruz
     quantity = request.POST.get('quantity')
 
     if quantity:
         try:
-            qty = int(float(quantity))
+            # Nokta/virgül karmaşasını çözüp Decimal'e çeviriyoruz
+            qty = Decimal(str(quantity).replace(',', '.'))
 
             # KONTROL 1: Minimum sipariş miktarının altında mı?
             if qty < product.minimum_order_quantity:
                 messages.error(request,
-                               f"{product.name} için minimum sipariş miktarı {product.minimum_order_quantity | floatformat:'0'} kg'dır.")
+                               f"{product.name} için minimum sipariş miktarı {product.minimum_order_quantity.normalize()} kg'dır.")
                 return redirect(request.META.get('HTTP_REFERER', 'orders:cart_detail'))
 
-            # KONTROL 2: Girilen miktar, ürünün satış katına tam bölünmüyorsa hata ver
+            # KONTROL 2: Satış katına tam bölünüyor mu?
             if qty % product.unit_step != 0:
                 messages.error(request,
-                               f"{product.name} ürünü sadece {product.unit_step} kg ve katları şeklinde sipariş edilebilir.")
+                               f"{product.name} ürünü sadece {product.unit_step.normalize()} kg ve katları şeklinde sipariş edilebilir.")
                 return redirect(request.META.get('HTTP_REFERER', 'orders:cart_detail'))
 
-            # Sorun yoksa sepete ekle
             cart.add(product=product, quantity=qty)
-            messages.success(request, f"{product.name} ({qty} kg) sepete eklendi.")
+            messages.success(request, f"{product.name} ({qty.normalize()} kg) sepete eklendi.")
 
-        except ValueError:
+        except (ValueError, InvalidOperation):
             messages.error(request, "Geçersiz bir miktar girdiniz.")
             return redirect(request.META.get('HTTP_REFERER', 'orders:cart_detail'))
 
-    # DEĞİŞİKLİK BURADA: Direkt sepet detayına gitmek yerine, kullanıcının geldiği sayfaya geri döndürüyoruz.
-    # Eğer geldiği sayfa bilgisi (HTTP_REFERER) yoksa, yedek olarak ürün listesine veya sepete yönlendirebilirsin.
     return redirect(request.META.get('HTTP_REFERER', 'products:b2b_list'))
 
 

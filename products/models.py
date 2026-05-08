@@ -1,3 +1,5 @@
+# products/models.py
+
 from django.db import models
 from django.core.validators import MinValueValidator
 from decimal import Decimal
@@ -60,17 +62,24 @@ class Product(models.Model):
         verbose_name="Stok Miktarı (KG)"
     )
 
+    # --- DEĞİŞTİRİLEN KISIM BAŞLANGICI ---
     UNIT_STEP_CHOICES = [
-        (1, '1 kg (Standart)'),
-        (3, '3 kg Katları'),
-        (5, '5 kg Katları'),
+        (Decimal('0.5'), '0.5 kg (Yarım Kilo)'),
+        (Decimal('1.0'), '1 kg (Standart)'),
+        (Decimal('2.5'), '2.5 kg Katları'),
+        (Decimal('3.0'), '3 kg Katları'),
+        (Decimal('5.0'), '5 kg Katları'),
+        (Decimal('10.0'), '10 kg Katları'),
     ]
-    unit_step = models.IntegerField(
+    unit_step = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
         choices=UNIT_STEP_CHOICES,
-        default=1,
+        default=Decimal('1.0'),
         verbose_name="B2B Satış Katı (kg)",
         help_text="B2B kısmında bu ürünün kaçar kg'lık katlarla satılacağını belirler."
     )
+    # --- DEĞİŞTİRİLEN KISIM BİTİŞİ ---
 
     minimum_order_quantity = models.DecimalField(
         max_digits=6,
