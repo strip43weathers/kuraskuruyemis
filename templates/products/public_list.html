@@ -80,7 +80,7 @@
     }
     /* Hero Görseli Varsayılan (Mobil) Yüksekliği */
     .hero-carousel-img { 
-        height: 250px; /* Mobilde yatay ve estetik durması için kısaltıldı */
+        height: 250px; 
         object-fit: cover; 
         width: 100%; 
     }
@@ -89,12 +89,12 @@
     @media (min-width: 768px) {
         .product-img-wrapper { height: 260px; }
         .product-card-title { font-size: 1.25rem; }
-        .hero-carousel-img { height: 400px; } /* Tablette biraz daha yüksek */
+        .hero-carousel-img { height: 400px; } 
     }
 
     /* Masaüstü Ekranlar İçin (992px ve üzeri) */
     @media (min-width: 992px) {
-        .hero-carousel-img { height: 530px; } /* Masaüstünde senin orjinal boyutun */
+        .hero-carousel-img { height: 530px; } 
     }
 
     /* Kampanya Afişleri Stilleri - YATAY KAYDIRMALI */
@@ -102,7 +102,7 @@
         background-color: #ECE0D1;
         border-radius: 20px;
         padding: 45px 20px;
-        margin-top: 3rem; /* Yukarıdan biraz daha boşluk bıraktık ki sayfalama butonlarına yapışmasın */
+        margin-top: 1rem; /* Hero'nun hemen altında olacağı için boşluğu azalttık */
         margin-bottom: 3rem;
     }
 
@@ -143,6 +143,26 @@
     .campaign-banner img { width: 100%; height: 100%; object-fit: cover; }
 </style>
 
+{% if campaigns %}
+<div class="campaign-container shadow-sm w-100">
+    <div class="campaign-scroll-wrapper px-2 px-lg-4">
+        {% for campaign in campaigns %}
+        <div class="campaign-scroll-item">
+            <a href="?campaign={{ campaign.id }}" class="campaign-banner shadow text-decoration-none">
+                {% if campaign.image %}
+                    <img src="{{ campaign.image.url }}" alt="{{ campaign.title }}">
+                {% else %}
+                    <div class="bg-white p-4 text-center rounded d-flex flex-column align-items-center justify-content-center h-100">
+                        <h4 class="text-danger fw-bold mb-0 brand-font">{{ campaign.title }}</h4>
+                        <small class="text-muted mt-2">Ürünleri Gör <i class="bi bi-arrow-right"></i></small>
+                    </div>
+                {% endif %}
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
 {% if active_campaign %}
 <div class="alert alert-danger d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 border-0 shadow-sm rounded-4" style="background-color: #fcf0f0; color: #C1121F;">
     <h4 class="mb-2 mb-md-0 fw-bold brand-font"><i class="bi bi-star-fill me-2 text-warning"></i> {{ active_campaign.title }}</h4>
@@ -247,29 +267,6 @@
     </ul>
 </nav>
 {% endif %}
-
-<!-- KAMPANYA BLOĞU BURAYA TAŞINDI -->
-{% if campaigns %}
-<div class="campaign-container shadow-sm w-100">
-    <div class="campaign-scroll-wrapper px-2 px-lg-4">
-        {% for campaign in campaigns %}
-        <div class="campaign-scroll-item">
-            <a href="?campaign={{ campaign.id }}" class="campaign-banner shadow text-decoration-none">
-                {% if campaign.image %}
-                    <img src="{{ campaign.image.url }}" alt="{{ campaign.title }}">
-                {% else %}
-                    <div class="bg-white p-4 text-center rounded d-flex flex-column align-items-center justify-content-center h-100">
-                        <h4 class="text-danger fw-bold mb-0 brand-font">{{ campaign.title }}</h4>
-                        <small class="text-muted mt-2">Ürünleri Gör <i class="bi bi-arrow-right"></i></small>
-                    </div>
-                {% endif %}
-            </a>
-        </div>
-        {% endfor %}
-    </div>
-</div>
-{% endif %}
-<!-- KAMPANYA BLOĞU SONU -->
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {

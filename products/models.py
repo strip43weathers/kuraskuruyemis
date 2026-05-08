@@ -62,33 +62,22 @@ class Product(models.Model):
         verbose_name="Stok Miktarı (KG)"
     )
 
-    # --- DEĞİŞTİRİLEN KISIM BAŞLANGICI ---
-    UNIT_STEP_CHOICES = [
-        (Decimal('0.5'), '0.5 kg (Yarım Kilo)'),
-        (Decimal('1.0'), '1 kg (Standart)'),
-        (Decimal('2.5'), '2.5 kg Katları'),
-        (Decimal('3.0'), '3 kg Katları'),
-        (Decimal('5.0'), '5 kg Katları'),
-        (Decimal('10.0'), '10 kg Katları'),
-    ]
     unit_step = models.DecimalField(
         max_digits=5,
         decimal_places=2,
-        choices=UNIT_STEP_CHOICES,
-        default=Decimal('1.0'),
+        default=Decimal('1.00'),
+        validators=[MinValueValidator(Decimal('0.10'))],  # 0 veya eksi değer girilmesini engeller
         verbose_name="B2B Satış Katı (kg)",
-        help_text="B2B kısmında bu ürünün kaçar kg'lık katlarla satılacağını belirler."
+        help_text="Bu ürünün kaçar kg'lık katlarla satılacağını serbestçe yazabilirsiniz. Hangi sayıyı girerseniz ürün o şekilde artar. Örneğin 2.5 girerseniz 2.5, 5, 7.5 10 şeklinde artar."
     )
-    # --- DEĞİŞTİRİLEN KISIM BİTİŞİ ---
 
     minimum_order_quantity = models.DecimalField(
         max_digits=6,
         decimal_places=2,
-        default=Decimal('5.00'),  # Örn: Minimum 5 KG alınabilir
+        default=Decimal('0.00'),
         validators=[MinValueValidator(Decimal('0.10'))],
         verbose_name="Minimum Sipariş Miktarı (KG)",
-        help_text="Lütfen üst kısımdaki 'B2B Satış Katı' ile uyumlu bir rakam girin (Örn: Katı 3 ise minimum 3, 6, 9; katı 5 ise 5, 10, 15 gibi)."
-
+        help_text="Lütfen üst kısımdaki 'B2B Satış Katı' ile tam bölünebilen uyumlu bir rakam girin. Örneğin satış katı 2.5 ise buraya 2.5, 5, 7.5, 10 gibi değerler girin."
     )
 
     is_active = models.BooleanField(
