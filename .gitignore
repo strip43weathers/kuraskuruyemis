@@ -1,15 +1,15 @@
 .venv
 
-# Çevresel Değişkenler (Şifrelerin asla GitHub'a gitmemeli!)
+
 .env
 
-# Kullanıcı veya Admin tarafından yüklenen dinamik dosyalar
+
 media/
 
-# Veritabanı dosyaları (Eğer lokalde SQLite kullanıyorsan)
+
 db.sqlite3
 
-# Statik dosyaların toplandığı klasör
+
 staticfiles/
 
 certbot/

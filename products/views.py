@@ -1,9 +1,7 @@
-# products/views.py
-
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger  # YENİ: Paginator sınıfları eklendi
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Category, Product, ContactMessage, FAQ, Campaign, HeroSlide
 from django.contrib import messages
 from django.shortcuts import redirect
@@ -38,22 +36,19 @@ def b2b_product_list(request):
     elif sort_by == 'newest':
         products = products.order_by('-created_at')
 
-    # --- SAYFALAMA (PAGINATION) İŞLEMİ ---
-    # Her sayfada kaç ürün gösterileceğini belirliyoruz (Örn: 12)
+
     paginator = Paginator(products, 30)
-    page_number = request.GET.get('page')  # URL'den '?page=2' gibi sayfa numarasını al
+    page_number = request.GET.get('page')
 
     try:
         products_paginated = paginator.page(page_number)
     except PageNotAnInteger:
-        # Eğer sayfa numarası tam sayı değilse veya boşsa ilk sayfayı göster
         products_paginated = paginator.page(1)
     except EmptyPage:
-        # Eğer girilen sayfa numarası toplam sayfa sayısından büyükse son sayfayı göster
         products_paginated = paginator.page(paginator.num_pages)
 
     context = {
-        'products': products_paginated,  # Artık tüm listeyi değil, sadece o sayfanın ürünlerini yolluyoruz
+        'products': products_paginated,
         'categories': categories,
         'current_query': query,
         'current_category': category_id,
@@ -63,15 +58,12 @@ def b2b_product_list(request):
     return render(request, 'products/b2b_list.html', context)
 
 
-# views.py içindeki public_product_list fonksiyonunu bununla değiştirin:
-
 def public_product_list(request):
     """Fiyatların ve sepetin olmadığı halka açık katalog."""
     products = Product.objects.filter(is_active=True, is_public=True).select_related('category')
     categories = Category.objects.filter(is_active=True)
     campaigns = Campaign.objects.filter(is_active=True)
 
-    # YENİ: Hero slaytlarını ürünleriyle birlikte çekiyoruz
     hero_slides = HeroSlide.objects.filter(is_active=True).prefetch_related('products')
 
     query = request.GET.get('q', '')
@@ -79,26 +71,20 @@ def public_product_list(request):
     sort_by = request.GET.get('sort', 'newest')
     campaign_id = request.GET.get('campaign', '')
 
-    # YENİ: URL'den tıklanan hero slaytı bilgisini alıyoruz
     hero_id = request.GET.get('hero', '')
 
-    # 1. Arama Filtresi
     if query:
         products = products.filter(Q(name__icontains=query) | Q(sku__icontains=query))
 
-    # 2. Kategori Filtresi
     if category_id:
         products = products.filter(category_id=category_id)
 
-    # 3. Kampanya Filtresi
     if campaign_id:
         products = products.filter(campaigns__id=campaign_id)
 
-    # YENİ: Hero Slaytı Filtresi
     if hero_id:
         products = products.filter(hero_slides__id=hero_id)
 
-    # Sıralama İşlemi
     if sort_by == 'name_asc':
         products = products.order_by('name')
     elif sort_by == 'name_desc':
@@ -106,7 +92,6 @@ def public_product_list(request):
     else:
         products = products.order_by('-created_at')
 
-    # Sayfalama
     paginator = Paginator(products, 15)
     page_number = request.GET.get('page')
 
@@ -121,7 +106,6 @@ def public_product_list(request):
     if campaign_id:
         active_campaign = Campaign.objects.filter(id=campaign_id).first()
 
-    # YENİ: Eğer slayta tıklandıysa, başlığını ekrana yazdırabilmek için verisini alıyoruz
     active_hero = None
     if hero_id:
         active_hero = HeroSlide.objects.filter(id=hero_id).first()
@@ -134,10 +118,10 @@ def public_product_list(request):
         'current_sort': sort_by,
         'current_campaign': campaign_id,
         'active_campaign': active_campaign,
-        'current_hero': hero_id,  # YENİ
-        'active_hero': active_hero,  # YENİ
+        'current_hero': hero_id,
+        'active_hero': active_hero,
         'campaigns': campaigns,
-        'hero_slides': hero_slides,  # YENİ
+        'hero_slides': hero_slides,
     }
 
     return render(request, 'products/public_list.html', context)
@@ -145,9 +129,7 @@ def public_product_list(request):
 
 def public_product_detail(request, pk):
     """Halka açık tekil ürün detay sayfası."""
-    # Sadece aktif ve vitrin için işaretlenmiş ürünü getir
     product = get_object_or_404(Product, pk=pk, is_active=True, is_public=True)
-    # Menüdeki kategoriler için
     categories = Category.objects.filter(is_active=True)
 
     return render(request, 'products/public_detail.html', {
@@ -172,13 +154,11 @@ def contact(request):
     categories = Category.objects.filter(is_active=True)
 
     if request.method == 'POST':
-        # Formdaki 'name', 'phone', 'email' ve 'message' alanlarını yakala
         name = request.POST.get('name')
         phone = request.POST.get('phone')
         email = request.POST.get('email')
         message_text = request.POST.get('message')
 
-        # Veritabanına kaydet
         ContactMessage.objects.create(
             name=name,
             phone=phone,

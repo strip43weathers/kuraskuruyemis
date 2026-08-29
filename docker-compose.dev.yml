@@ -11,7 +11,6 @@ services:
       - POSTGRES_PASSWORD=${DB_PASSWORD:-b2b_pass}
     ports:
       - "5432:5432"
-    # YENİ: Veritabanının bağlantıya hazır olup olmadığını kontrol eder
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-b2b_user} -d ${DB_NAME:-kuruyemis_b2b}"]
       interval: 5s
@@ -30,7 +29,7 @@ services:
       - "8000:8000"
     depends_on:
       db:
-        condition: service_healthy # YENİ: Sadece db "sağlıklı" olduğunda web'i başlat
+        condition: service_healthy
 
 volumes:
   postgres_data_dev:

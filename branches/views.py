@@ -1,4 +1,3 @@
-# branches/views.py
 from django.views.generic import ListView, DetailView
 from .models import Branch
 
@@ -9,7 +8,7 @@ class BranchListView(ListView):
     context_object_name = 'branches'
 
     def get_queryset(self):
-        return Branch.objects.filter(is_active=True)  # Sadece aktif şubeleri listele
+        return Branch.objects.filter(is_active=True)
 
 
 class BranchDetailView(DetailView):

@@ -1,5 +1,3 @@
-# orders/views.py
-
 import openpyxl
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -26,16 +24,13 @@ def cart_add(request, product_id):
 
     if quantity:
         try:
-            # Nokta/virgül karmaşasını çözüp Decimal'e çeviriyoruz
             qty = Decimal(str(quantity).replace(',', '.'))
 
-            # KONTROL 1: Minimum sipariş miktarının altında mı?
             if qty < product.minimum_order_quantity:
                 messages.error(request,
                                f"{product.name} için minimum sipariş miktarı {product.minimum_order_quantity.normalize()} kg'dır.")
                 return redirect(request.META.get('HTTP_REFERER', 'orders:cart_detail'))
 
-            # KONTROL 2: Satış katına tam bölünüyor mu?
             if qty % product.unit_step != 0:
                 messages.error(request,
                                f"{product.name} ürünü sadece {product.unit_step.normalize()} kg ve katları şeklinde sipariş edilebilir.")
@@ -55,7 +50,6 @@ def cart_add(request, product_id):
 def cart_detail(request):
     """Sepet içeriğini görüntüler."""
     cart = Cart(request)
-    # Şablonu bir sonraki adımda oluşturacağız
     return render(request, 'orders/cart_detail.html', {'cart': cart})
 
 
@@ -69,11 +63,10 @@ def checkout(request):
         return redirect('products:b2b_list')
 
     if request.method == 'POST':
-        # Müşteri siparişi onayladı. transaction.atomic ile bu bloktaki işlemlerden
-        # biri bile hata verirse (örneğin stok yetmezse) hiçbir şey veritabanına yazılmaz (rollback).
+
         try:
             with transaction.atomic():
-                # 1. Sipariş kaydını oluştur
+
                 order = Order.objects.create(
                     user=request.user,
                     status='RECEIVED',
@@ -82,24 +75,18 @@ def checkout(request):
 
                 total_amount = Decimal('0.00')
 
-                # 2. Sepetteki ürünleri dön ve stok kontrolü yap
                 for item_id, item_data in cart.cart.items():
-                    # select_for_update(): Bu satırı okurken kilitler, başka bir işlem buraya müdahale edemez.
                     product = Product.objects.select_for_update().get(id=item_id)
                     quantity = Decimal(item_data['quantity'])
                     price = Decimal(item_data['price'])
 
-                    # Stok kontrolü
                     if product.stock_quantity < quantity:
-                        # Eğer stok yetersizse hata fırlat, transaction.atomic tüm süreci iptal etsin
                         raise ValueError(
                             f"{product.name} için yeterli stok yok! Kalan stok: {product.stock_quantity} kg")
 
-                    # 3. Stoktan miktarı düş ve kaydet
                     product.stock_quantity -= quantity
                     product.save()
 
-                    # 4. Sipariş kalemini oluştur
                     OrderItem.objects.create(
                         order=order,
                         product=product,
@@ -110,28 +97,22 @@ def checkout(request):
 
                     total_amount += (quantity * price)
 
-                # 5. Toplam tutarı siparişe yaz
                 order.total_amount = total_amount
                 order.save()
 
-                # 6. İşlem bitti, sepeti boşalt
                 cart.clear()
                 messages.success(request, f"Siparişiniz başarıyla alındı! Sipariş No: #{order.id}")
 
-                # Başarılı olunca ürünler sayfasına geri dön
                 return redirect('products:b2b_list')
 
         except ValueError as e:
-            # Stok hatası mesajını müşteriye göster ve sepetine geri yolla
             messages.error(request, str(e))
             return redirect('orders:cart_detail')
 
         except Exception as e:
-            # Beklenmeyen bir hata (veritabanı bağlantısı kopması vb.)
             messages.error(request, "Sipariş işlenirken bir hata oluştu. Lütfen tekrar deneyin.")
             return redirect('orders:cart_detail')
 
-    # Eğer GET isteği ise, müşteriye sipariş öncesi "Onay" sayfasını göster
     return render(request, 'orders/checkout.html', {'cart': cart})
 
 
@@ -156,7 +137,6 @@ def cart_remove(request, product_id):
     cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)
 
-    # Yeni eklediğimiz remove metodunu çağırıyoruz
     cart.remove(product)
 
     messages.success(request, f"{product.name} sepetinizden çıkarıldı.")
@@ -171,24 +151,20 @@ def export_orders_to_excel(request):
             start = form.cleaned_data['start_date']
             end = form.cleaned_data['end_date']
 
-            # Belirlenen aralıktaki siparişleri çek (İçindeki kalemlerle birlikte)
             orders = Order.objects.filter(created_at__range=(start, end)).prefetch_related('items__product', 'user')
 
-            # Excel Çalışma Kitabı Oluştur
             wb = openpyxl.Workbook()
             ws = wb.active
             ws.title = "Sipariş Raporu"
 
-            # Başlık Satırı
             headers = ['Sipariş No', 'Tarih', 'Müşteri', 'Ürün', 'Miktar (KG)', 'Birim Fiyat', 'Toplam Tutar', 'Durum']
             ws.append(headers)
 
-            # Verileri Doldur
             for order in orders:
                 for item in order.items.all():
                     ws.append([
                         order.id,
-                        order.created_at.replace(tzinfo=None),  # Excel için timezone temizliği
+                        order.created_at.replace(tzinfo=None),
                         order.user.username,
                         item.product.name,
                         item.quantity,
@@ -197,7 +173,6 @@ def export_orders_to_excel(request):
                         order.get_status_display()
                     ])
 
-            # HTTP Yanıtı Hazırla
             response = HttpResponse(
                 content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             )

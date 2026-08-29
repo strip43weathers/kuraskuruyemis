@@ -2,47 +2,43 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-# .env dosyasını yükle
+
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# .env'den şifreyi okur, bulamazsa hata vermemesi için sahte bir şifre atar
+
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-fallback-key')
 
-# .env'den gelen değer string olduğu için onu Python boolean türüne çeviriyoruz
-# Mevcut satırın (Buna dokunmuyoruz)
+
+
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 
-# --- YENİ EKLENECEK GÜVENLİK BLOĞU ---
+
 if not DEBUG:
-    # --- DİKKAT: İLK KURULUM (SSL ALINANA KADAR) ---
-    # Certbot ile SSL alırken yönlendirme döngüsüne (redirect loop) girmemek için
-    # aşağıdaki 3 ayarı ŞİMDİLİK False yapıyoruz.
-    # SSL SERTİFİKASINI ALDIKTAN SONRA BUNLARI KESİNLİKLE TRUE YAP!
+
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
 
-    # --- ŞU AN AKTİF OLABİLECEK GÜVENLİK AYARLARI ---
-    # Tarayıcının XSS (Cross-Site Scripting) ve içerik türü manipülasyonu korumalarını açar
+
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
 
-    # Gunicorn/Nginx arkasında çalışırken Django'nun HTTPS trafiğini doğru algılamasını sağlar
+
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-# YENİ: Nginx ve Gunicorn arasındaki trafiğin güvenilir kabul edilmesi için (Form hatalarını önler)
+
 CSRF_TRUSTED_ORIGINS = [
     'https://kuraskuruyemis.com',
     'https://www.kuraskuruyemis.com',
-    'http://kuraskuruyemis.com',      # SSL alana kadar formların HTTP'de de çalışması için
-    'http://www.kuraskuruyemis.com',  # SSL alana kadar formların HTTP'de de çalışması için
+    'http://kuraskuruyemis.com',
+    'http://www.kuraskuruyemis.com',
 ]
 
 
-# Virgülle ayrılmış hostları listeye çeviriyoruz
+
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
 INSTALLED_APPS = [
@@ -166,10 +162,9 @@ LOGGING = {
     'loggers': {
         'django': {
             'handlers': ['console'],
-            'level': 'INFO',  # Canlıda sadece INFO, WARNING, ERROR mesajlarını göster
+            'level': 'INFO',
             'propagate': True,
         },
-        # Sipariş oluştururken (checkout vs.) oluşacak hataları yakalamak için
         'orders': {
             'handlers': ['console'],
             'level': 'WARNING',
@@ -179,7 +174,6 @@ LOGGING = {
 }
 
 
-# CKEditor Ayarları
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': 'Custom',

@@ -1,5 +1,3 @@
-# orders/cart.py
-
 from decimal import Decimal
 from django.conf import settings
 from products.models import Product
@@ -17,7 +15,7 @@ class Cart:
     def add(self, product, quantity=1):
         """Sepete ürün ekle veya miktarını güncelle."""
         product_id = str(product.id)
-        # Decimal'i JSON'da saklayabilmek için string'e çeviriyoruz
+
         quantity_str = str(quantity)
 
         if product_id not in self.cart:
@@ -26,7 +24,7 @@ class Cart:
                 'price': str(product.wholesale_price)
             }
         else:
-            # Var olan miktarın üzerine ekle
+
             current_qty = Decimal(self.cart[product_id]['quantity'])
             new_qty = current_qty + Decimal(quantity_str)
             self.cart[product_id]['quantity'] = str(new_qty)

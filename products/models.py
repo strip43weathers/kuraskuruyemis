@@ -1,5 +1,3 @@
-# products/models.py
-
 from django.db import models
 from django.core.validators import MinValueValidator
 from decimal import Decimal
@@ -40,13 +38,13 @@ class Product(models.Model):
         verbose_name="Vitrin/Perakende Fiyatı (TL)"
     )
 
-    # YENİ EKLENEN: Vitrin Fiyatını Göster/Gizle Şalteri
+
     show_public_price = models.BooleanField(
         default=False,
         verbose_name="4- Vitrinde Fiyatı Göster",
         help_text="İşaretlenirse halka açık katalogda 'Vitrin/Perakende Fiyatı' görünür."
     )
-    # models.py içindeki Product modeline şu alanı ekle:
+
 
     allow_whatsapp_order = models.BooleanField(
         default=True,
@@ -54,7 +52,7 @@ class Product(models.Model):
         help_text="Bu ürün için vitrinde 'WhatsApp ile Sipariş Ver' butonu görünsün mü?"
     )
 
-    # Stok ve Minimum Sipariş - KG cinsinden olacağı için DecimalField
+
     stock_quantity = models.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -66,7 +64,7 @@ class Product(models.Model):
         max_digits=5,
         decimal_places=2,
         default=Decimal('1.00'),
-        validators=[MinValueValidator(Decimal('0.10'))],  # 0 veya eksi değer girilmesini engeller
+        validators=[MinValueValidator(Decimal('0.10'))],
         verbose_name="B2B Satış Katı (kg)",
         help_text="Bu ürünün kaçar kg'lık katlarla satılacağını serbestçe yazabilirsiniz. Hangi sayıyı girerseniz ürün o şekilde artar. Örneğin 2.5 girerseniz 2.5, 5, 7.5 10 şeklinde artar."
     )
@@ -125,8 +123,6 @@ class ContactMessage(models.Model):
         return f"{self.name} - {self.email}"
 
 
-# products/models.py dosyasının en altına ekle
-
 class FAQ(models.Model):
     question = models.CharField(max_length=255, verbose_name="Soru")
     answer = models.TextField(verbose_name="Cevap")
@@ -142,17 +138,13 @@ class FAQ(models.Model):
         return self.question
 
 
-# models.py dosyasının EN ALTINA ekleyin
-
-# models.py içindeki Campaign modelini şu şekilde değiştirin:
 
 class Campaign(models.Model):
     title = models.CharField(max_length=150, verbose_name="Kampanya/Bölüm Başlığı", help_text="Örn: En Sevilen Ürünler")
-    # Görsel opsiyonel olsun, eğer sadece başlık ve ürünler görünsün istersen diye
+
     image = models.ImageField(upload_to='campaigns/%Y/%m/', verbose_name="Bölüm Banner Görseli (Opsiyonel)", blank=True,
                               null=True)
 
-    # YENİ: Tek bir ürün yerine çoklu ürün seçimi
     products = models.ManyToManyField(Product, related_name='campaigns', verbose_name="Kampanyaya Dahil Ürünler")
 
     order = models.PositiveIntegerField(default=0, verbose_name="Sıralama")
@@ -171,7 +163,7 @@ class HeroSlide(models.Model):
     title = models.CharField(max_length=150, verbose_name="Slayt Başlığı (Sadece Admin Görür)")
     image = models.ImageField(upload_to='hero/%Y/%m/', verbose_name="Hero Görseli (Tavsiye: 1920x530)")
 
-    # YENİ: Tek ürün yerine çoklu ürün seçimi
+
     products = models.ManyToManyField(
         Product,
         related_name='hero_slides',
